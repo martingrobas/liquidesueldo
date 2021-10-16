@@ -1,49 +1,119 @@
 
 """Cosas que no deben faltar en la liquidación de sueldo:
 
-Antiguedad
-Sueldo basico (Tenemos que ver si es fijo o lo ingresamos por teclado.)
-Obra social
-Descuento ley 19032 (ver)
-Descuento ley 23660 (ver)
-Jubilación
-Medicina prepaga
+
+
+Antiguedad ()
+Sueldo basico (Según tabla de convenio)
+
 Presentismo (+)
 Horas extras (+)
+
 Direccion
 Nacimiento
 Datos filiatorios
 DNI
-CUIL
+
 Fecha de ingreso
 Escala salarial
 Vacaciones
 Soltero o Casado
 Con o sin hijos
-Aporte sindical, jubilatorio, etc
+
+
+Descuentos:
+Jubilación
+Obra Social
+
 """
 
+"""
+A consultar:
+def completacuil():
+    # Con esta función determinamos el CUIL de cada empleado según su DNI (o sexo).
+"""
 
 # PRIMERA PARTE - IMPORTACIONES
+#------ Se hacen los importes necesarios ------#
+import csv
+import pandas as pd  # Hacer en la terminal pip install numpy y NumPy y luego pip install pandas
+from termcolor import colored #Hacer en la terminal pip install termcolor
 
-#------Se hacen los importes necesarios, por ejemplo: ------#
-import datetime
-import pandas
-import time
-#import libreria para poner colores
 
-legajo=int(input("Ingrese el legajo del empleado:\n"))
-salariobruto=int(input("Indique el salario bruto:\n"))
-nombre=input("Ingrese el nombre del empleado.\n")
-años=int(input("Indique los años de antiguedad:\n"))
-#medprepaga=input("¿Paga medicina prepaga?.S/N")
-
-antiguedad=años*0.03
-obrasocial=salariobruto*0.03
-leyjub=salariobruto*0.03
-salarioneto=salariobruto-antiguedad-obrasocial-leyjub
-print("El salario neto del empleado",nombre,"con legajo",legajo,"es",round(salarioneto,2))
+# SEGUNDA PARTE - LECTURA DE DATOS INICIALES
+#------ Carga de datos ------#
+df = pd.read_csv("categorias.csv")
 
 
 
-#ec = input("Ingrese su estado civil como 'c' para casado o 's' para soltero: ")
+
+# TERCERA PARTE - FUNCIONES
+
+# Opción 1
+def agregar_trabajador():
+    print("opción 1")
+
+# Opción 2
+def eliminar_trabajador():
+    print("opción 2")
+
+# Opción 3
+def consultar_trabajador():
+    print("opción 3")
+
+# Opción 4
+def obtener_liquidacion():
+    print("opción 4")
+
+# Opción 5
+def imprimir_data(data_frame):
+    print(data_frame)
+
+# Opción 6
+def detener_programa():
+    print("opción 6")
+    
+  
+# CUARTA PARTE - PROGRAMA PRINCIPAL
+#------Se muestra la "interfaz" ------#
+print()
+print(colored("Bienvenido al programa de Liquidacion de Sueldos"), "purple_lb", attrs=["blink"])
+print()
+
+corriendo = True
+while corriendo:
+    print(colored("             Menú Principal           ", "purple_lb", attrs=["bold"]))
+    print(colored(" 1  -  ", "purple_lb", attrs=["bold"]), "Agregar Trabajador")
+    print(colored(" 2  -  ", "purple_lb", attrs=["bold"]), "Eliminar Trabajador")
+    print(colored(" 3  -  ", "purple_lb", attrs=["bold"]), "Consultar Trabajador")
+    print(colored(" 4  -  ", "purple_lb", attrs=["bold"]), "Obtener una Liquidación")
+    print(colored(" 5  -  ", "purple_lb", attrs=["bold"]), "Imprimir Datos")
+    print(colored(" 6  -  ", "purple_lb", attrs=["bold"]), "Detener Programa")    
+
+    opcion = int(input("Por favor seleccione una opción: "))
+    while (opcion < 1) or (opcion > 6):
+        print()
+        print("Opción no válida")
+        opcion = input("Por favor indique su opción a seleccionar (entre 1 y 6): ")
+
+        if (opcion == 1):
+            agregar_trabajador()
+        elif (opcion == 2):
+            eliminar_trabajador()
+        elif (opcion == 3):
+            consultar_trabajador()
+        elif (opcion == 4):
+            obtener_liquidacion()
+        elif (opcion == 5):
+            imprimir_data(df)
+        else:
+            detener_programa()
+
+"""Se debe desplegar el menu con las 4 opciones, a saber:
+
+1) Crear o generar carga de datos de empleado #GABI agregar trabajador
+2) Modificar datos #Lucas Perez Erro
+3) Borrar datos sobre un empleado #Julian
+4) Consultar datos/Imprimir datos #Martin
+
+""" 
