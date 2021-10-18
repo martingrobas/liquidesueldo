@@ -36,8 +36,10 @@ def completacuil():
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
 import csv
+import time
 import pandas as pd  # Hacer en la terminal pip install numpy y NumPy y luego pip install pandas
-from termcolor import colored #Hacer en la terminal pip install termcolor
+import colored
+from colored import stylize #Hacer en la terminal pip install termcolor
 
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
@@ -76,38 +78,47 @@ def detener_programa():
   
 # CUARTA PARTE - PROGRAMA PRINCIPAL
 #------Se muestra la "interfaz" ------#
+azul = colored.fg("sky_blue_1") + colored.attr("bold")
+morado = colored.fg("purple_1b") + colored.attr("bold")
+
+for i in range(3):
+    print(stylize("Iniciando...", morado))
+    time.sleep(0.7)
 print()
-print(colored("Bienvenido al programa de Liquidacion de Sueldos"), "purple_lb", attrs=["blink"])
+print(stylize("Bienvenido al programa de Liquidacion de Sueldos", azul)), time.sleep(0.7)
 print()
 
 corriendo = True
 while corriendo:
-    print(colored("             Menú Principal           ", "purple_lb", attrs=["bold"]))
-    print(colored(" 1  -  ", "purple_lb", attrs=["bold"]), "Agregar Trabajador")
-    print(colored(" 2  -  ", "purple_lb", attrs=["bold"]), "Eliminar Trabajador")
-    print(colored(" 3  -  ", "purple_lb", attrs=["bold"]), "Consultar Trabajador")
-    print(colored(" 4  -  ", "purple_lb", attrs=["bold"]), "Obtener una Liquidación")
-    print(colored(" 5  -  ", "purple_lb", attrs=["bold"]), "Imprimir Datos")
-    print(colored(" 6  -  ", "purple_lb", attrs=["bold"]), "Detener Programa")    
+    print(stylize("             Menú Principal           ", morado)), time.sleep(0.5)
+    print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.5)
+    print(stylize(" 2  -    ", morado), stylize("Eliminar Trabajador", azul)), time.sleep(0.5)
+    print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.5)
+    print(stylize(" 4  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.5)
+    print(stylize(" 5  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.5)
+    print(stylize(" 6  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
 
+    print()
     opcion = int(input("Por favor seleccione una opción: "))
+    print()
+    
     while (opcion < 1) or (opcion > 6):
         print()
         print("Opción no válida")
-        opcion = input("Por favor indique su opción a seleccionar (entre 1 y 6): ")
+        opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
 
-        if (opcion == 1):
-            agregar_trabajador()
-        elif (opcion == 2):
-            eliminar_trabajador()
-        elif (opcion == 3):
-            consultar_trabajador()
-        elif (opcion == 4):
-            obtener_liquidacion()
-        elif (opcion == 5):
-            imprimir_data(df)
-        else:
-            detener_programa()
+    if (opcion == 1):
+        agregar_trabajador()
+    elif (opcion == 2):
+        eliminar_trabajador()
+    elif (opcion == 3):
+        consultar_trabajador()
+    elif (opcion == 4):
+        obtener_liquidacion()
+    elif (opcion == 5):
+        imprimir_data(df)
+    else:
+        detener_programa()
 
 """Se debe desplegar el menu con las 4 opciones, a saber:
 
