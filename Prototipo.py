@@ -41,6 +41,7 @@ def calculaedad(dd,mm,aa):
 
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
+import sys
 import csv
 import time
 import numpy as np
@@ -53,7 +54,8 @@ from colored import stylize #Hacer en la terminal pip install termcolor
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df = pd.read_csv("categorias.csv")
+df_categorias = pd.read_csv("categorias.csv")
+df_trabajadores = pd.read_csv("trabajadores.csv")
 matriz_trabajadores = np.loadtxt("categorias.csv", dtype=np.object, delimiter=",")
 
 
@@ -75,41 +77,57 @@ def obtener_cuil(sexo, dni):
 #DNI 36159460
 #CUIL 20 36159460 7
 
-
-
+def solicitar_puesto(categorias):
+    df[df["FUNCION"].astype(str)
 
 
 # Opción 1
-def agregar_trabajador():
+def agregar_trabajador(matriz_trabajadores):
+
+    trabajador = []
 
     # Nombres
     nombre = input("Ingrese el nombre y apellido:\n")
+    trabajador.append(nombre)
     
     # Letras
     sexo = input("Ingrese 'f' para femenino o 'm' para masculino\n").toupper()
     while (sexo != 'F') or (sexo != 'M'):
         print('No ingresó una letra válida')
         sexo= input("Por favor ingrese 'f' para femenino o 'm' para masculino\n").toupper()
+    trabajador.append(sexo)
     
+
     # Numeros
     legajo=int(input("Ingrese el legado del trabajador:\n"))
+    trabajador.append(legajo)
+
     dni=int(input("Ingrese el DNI:\n"))
+    trabajador.append(dni)
+
     cuil = obtener_cuil(sexo, dni)
+    trabajador.append(cuil)
 
-    fechaingreso = input("Indique la fecha de ingreso a la empresa (DD/MM/AAAA):\n")
-    ingreso = datetime.strptime(fechaingreso, '%d/%m/%Y')
-    #En base a la fecha de ingreso se debe determinar la antiguedad (en años) con una función.
+    fecha_ingreso = input("Indique la fecha de ingreso a la empresa (DD-MM-AAAA):\n")
+    trabajador.append(fecha_ingreso)
 
+    fecha_actual = datetime.today().strftime('%Y-%m-%d')
+    antiguedad = fecha_actual - fecha_ingreso     #En base a la fecha de ingreso se debe determinar la antiguedad (en años) con una función.
+    trabajador.append(antiguedad)
+    
     birthday = input("Ingrese la fecha de nacimiento (DD/MM/AAAA):\n")
     cumple = verificar_fecha(birthday)
     while not cumple:
         print('No ingresó una fecha válida')
         birthday = input("Ingrese la fecha de nacimiento (DD/MM/AAAA):\n")
         cumple = verificar_fecha(birthday)
+    trabajador.append(birthday)
         
-    
-    
-    
+    edad = fecha_actual - birthday
+    trabajador.append(edad) 
+
+    puesto = solicitar_puesto()
+    trabajador.append(puesto)
     """Elija el puesto:
     1 Supervisor   60000
     2 Encargado 550000
@@ -128,6 +146,9 @@ def eliminar_trabajador(matriz_trabajadores):
 
 # Opción 3
 def consultar_trabajador():
+    buscar_trab=input(int("Ingrese el legajo del trabajador que desea consultar"))
+    if buscar_trab
+
     print("opción 3")
 
 # Opción 4 
@@ -140,8 +161,21 @@ def imprimir_data(data_frame):
 
 # Opción 6
 def detener_programa():
-    print("Gracias por usar nuestro sistema de liquidacion de sueldos, PONENOS UN 10 FORRO :D")
-    print("opción 6")
+    corriendo= False
+    print("Gracias por usar nuestro sistema de liquidacion de sueldos")
+    print("Por favor cuentanos como ha sido tu experiencia: ")
+    print("1 - Muy Insatisfactorio")
+    print("2 - Insatisfactorio")
+    print("3 - Medianamente Satisfactorio")
+    print("4 - Satisfactorio")
+    print("5 - Muy satisfactorio")
+    ranking=int(input("Por favor seleccione un numero del 1 al 5 en base a su nivel de satisfaccion: "))
+    while ranking < 1 or ranking > 5:
+        print("Error, ingreso un valor valido")
+        ranking=int(input("Por favor seleccione un numero del 1 al 5 en base a su nivel de satisfaccion: "))
+         
+    
+    print("opción 6")                                             
     
   
 # CUARTA PARTE - PROGRAMA PRINCIPAL
@@ -185,11 +219,11 @@ while corriendo:
     elif (opcion == 4):
         obtener_liquidacion()
     elif (opcion == 5):
-        imprimir_data(df)
+        imprimir_data(df_trabajadores)
     else:
         detener_programa()
 
-"""Se debe desplegar el menu con las 4 opciones, a saber:
+corriendo = """Se debe desplegar el menu con las 4 opciones, a saber:
 
 1) Crear o generar carga de datos de empleado #GABI agregar trabajador
 2) Modificar datos #Lucas 
@@ -197,3 +231,4 @@ while corriendo:
 4) Consultar datos/Imprimir datos #Martin
 
 """ 
+
