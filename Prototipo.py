@@ -161,41 +161,41 @@ def eliminar_trabajador(matriz_trabajadores):
     print("opción 2")
 
 # Opción 3
-def consultar_trabajador(matriz_trabajadores):
-    legajo =input(int("Ingrese el legajo del trabajador que desea consultar: "))
+def consultar_trabajador(matriz_trabajadores, df_trabajadores):
+    time.sleep(1)
+    legajo = int(input("Ingrese el legajo del trabajador que desea consultar: "))
     print()
 
-    for i in range(len(matriz_trabajadores)):
-        if legajo == matriz_trabajadores[i][3]:
-            print("El trabajador de encuentra dentro de los registros")
-            print("Datos del trabajador".center(50))
-            print(matriz_trabajadores[i][3].center(50))
+    for i in range(1, len(matriz_trabajadores)):
+        if legajo == int(matriz_trabajadores[i][2]):
+            time.sleep(1)
+            print("El trabajador se encuentra dentro de los registros")
+            print("Datos del trabajador")
+            print(df_trabajadores.loc[0,:])
+            print(df_trabajadores.loc[i,:])
             print()
             print("A continuación será llevado de regreso al menú principal")
             print()
-            time.sleep(1.5)
+            time.sleep(3.5)
             break
     else:
-        print("El trabajador no se encuentra dentro de los registros")
+        time.sleep(1)
+        print("El trabajador no se encuentra dentro de los registros"), time.sleep(1.5)
         print("Desea volver a intentarlo?")
-        print("Ingrese 'Si' o 'No'")
-        respuesta = input("Respuesta: ").upper
+        print("Ingrese -1 para volver a intentar o 0 para cotinuar:")
+        respuesta = int(input("Respuesta: "))
         
-        while respuesta != 'SI' or respuesta != 'NO':
-            print("Por favor ingrese 'Si' o 'No': ")
-            respuesta = input("Respuesta: ").upper
+        while (respuesta != -1) and (respuesta != 0):
+            print("Por favor ingrese -1 para volver a intentar o 0 para cotinuar:")
+            respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
-        if respuesta == "SI":
-            consultar_trabajador(matriz_trabajadores)
-            time.sleep(1.5)
+        if respuesta == -1:
+            consultar_trabajador(matriz_trabajadores, df_trabajadores)
         else:
             print("Entendido, será llevado de regreso al menú principal")
             print()
-            time.sleep(1.5)
-    
+            time.sleep(3.5)
 
-
-    print("opción 3")
 
 # Opción 4 
 def obtener_liquidacion():
@@ -217,13 +217,13 @@ def imprimir_data(data_frame):
 def finalizar_programa(morado, azul):
     time.sleep(0.5)
     print()
-    print(stylize("Gracias por usar nuestro sistema de liquidación de sueldos", morado)), time.sleep(0.5)
-    print(stylize("Por favor cuéntenos como ha sido su experiencia: ", morado)), time.sleep(0.5)
-    print(stylize(" 1  -    ", morado), stylize("Muy Insatisfactorio", azul)), time.sleep(0.5)
-    print(stylize(" 2  -    ", morado), stylize("Insatisfactorio", azul)), time.sleep(0.5)
-    print(stylize(" 3  -    ", morado), stylize("Medianamente Satisfactorio", azul)), time.sleep(0.5)
-    print(stylize(" 4  -    ", morado), stylize("Satisfactorio", azul)), time.sleep(0.5)
-    print(stylize(" 5  -    ", morado), stylize("Muy satisfactorio", azul)), time.sleep(0.5)
+    print(stylize("Gracias por usar nuestro sistema de liquidación de sueldos", morado)), time.sleep(0.3)
+    print(stylize("Por favor cuéntenos como ha sido su experiencia: ", morado)), time.sleep(0.3)
+    print(stylize(" 1  -    ", morado), stylize("Muy Insatisfactorio", azul)), time.sleep(0.3)
+    print(stylize(" 2  -    ", morado), stylize("Insatisfactorio", azul)), time.sleep(0.3)
+    print(stylize(" 3  -    ", morado), stylize("Medianamente Satisfactorio", azul)), time.sleep(0.3)
+    print(stylize(" 4  -    ", morado), stylize("Satisfactorio", azul)), time.sleep(0.3)
+    print(stylize(" 5  -    ", morado), stylize("Muy satisfactorio", azul)), time.sleep(0.3)
     print()
 
     time.sleep(1)
@@ -240,6 +240,7 @@ def finalizar_programa(morado, azul):
     naranja = colored.fg("orange_4b") + colored.attr("bold")
     amarillo = colored.fg("yellow") + colored.attr("bold")
     verde = colored.fg("green") + colored.attr("bold")
+
     if (ranking == 1):
         print(stylize(" :'( buscaremos mejorar el servicio", rojo))
     elif (ranking == 2):
@@ -247,9 +248,9 @@ def finalizar_programa(morado, azul):
     elif (ranking == 3):
         print(stylize(" :| Esperamos que la próxima sea mejor", amarillo))
     elif (ranking == 4):
-        print(stylize(" :) Nos alegra", azul))
+        print(stylize(" :) Nos alegra", verde))
     elif (ranking == 5):
-        print(stylize(" :D Fabuloso!", verde))
+        print(stylize(" :D Fabuloso!", azul))
     
     print()
     return False                                            
@@ -269,12 +270,12 @@ print()
 
 corriendo = True
 while corriendo:
-    print(stylize("             Menú Principal           ", morado)), time.sleep(0.5)
-    print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.5)
-    print(stylize(" 2  -    ", morado), stylize("Eliminar Trabajador", azul)), time.sleep(0.5)
-    print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.5)
-    print(stylize(" 4  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.5)
-    print(stylize(" 5  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.5)
+    print(stylize("             Menú Principal           ", morado)), time.sleep(0.3)
+    print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 2  -    ", morado), stylize("Eliminar Trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 4  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
+    print(stylize(" 3  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
     print(stylize(" 6  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
 
     print()
@@ -291,7 +292,7 @@ while corriendo:
     elif (opcion == 2):
         eliminar_trabajador()
     elif (opcion == 3):
-        consultar_trabajador()
+        consultar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 4):
         obtener_liquidacion()
     elif (opcion == 5):
