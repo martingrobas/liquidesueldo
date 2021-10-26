@@ -42,6 +42,7 @@ def calculaedad(dd,mm,aa):
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
 import csv
+import re
 import time
 import random
 import colored
@@ -59,6 +60,14 @@ matriz_trabajadores = np.loadtxt("trabajadores.csv", dtype=np.object, delimiter=
 
 
 # TERCERA PARTE - FUNCIONES
+
+def validafecha(cad): #funcion hecha por juli alagastin :D
+    validacion='^(0\d|1[0-9]|2[0-9]|3[0-1])/(0\d|1[0-2])/(19[0-9]{2}|20[0-9]{2})$'
+    return bool(re.search(validacion,cad))
+
+fecha=input("Ingrese fecha con el formato DD/MM/AAAA:")
+
+print(validafecha(fecha))
 
 
 
@@ -157,7 +166,13 @@ def agregar_trabajador(matriz_trabajadores):
     print("opción 1")
 
 # Opción 2 
-def eliminar_trabajador(matriz_trabajadores):
+def dar_de_baja(matriz_trabajadores,df_trabajadores): #FUNCION HECHA POR MARTINCITO :D
+    darDeBaja=int(input("ingrese el legajo del trabajador que desea dar de baja"))
+    matriz_trabajadores=df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo']==darDeBaja].index, inplace=True)
+    print(df_trabajadores)
+
+    return matriz_trabajadores
+
     print("opción 2")
 
 # Opción 3
@@ -199,6 +214,7 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 # Opción 4 
 def obtener_liquidacion():
+    
     time.sleep(0.5)
 
     print("opción 4")
@@ -272,10 +288,10 @@ corriendo = True
 while corriendo:
     print(stylize("             Menú Principal           ", morado)), time.sleep(0.3)
     print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 2  -    ", morado), stylize("Eliminar Trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 2  -    ", morado), stylize("Dar de Baja Trabajador", azul)), time.sleep(0.3)
     print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.3)
     print(stylize(" 4  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
-    print(stylize(" 3  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
+    print(stylize(" 5  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
     print(stylize(" 6  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
 
     print()
@@ -290,7 +306,7 @@ while corriendo:
     if (opcion == 1):
         agregar_trabajador()  
     elif (opcion == 2):
-        eliminar_trabajador()
+        dar_de_baja(matriz_trabajadores, df_trabajadores)
     elif (opcion == 3):
         consultar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 4):
@@ -302,3 +318,6 @@ while corriendo:
 
 time.sleep(1.5)
 print("Hasta pronto!")
+
+    
+
