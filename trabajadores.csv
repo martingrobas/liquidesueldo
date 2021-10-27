@@ -1,5 +1,5 @@
-Nombre,Sexo,Legajo,DNI,CUIL,Fecha Ingreso,Fecha Actual,Nacimiento,Edad,Horas extra,Presentismo,Escala Salarial,Vacaciones,Estado Civil,Hijos,Jubilacion,Puesto
-Marcelo Parma,M,1234,39300500,20 39300500 2,10/05/1999,26/10/2021,12/02/1985,44,0,S,2,7,C,S,N,Ayudante media jornada
-Mariano Martignoni,M,4321,35800600,20 35800600 4,15/06/2002,26/10/2022,11/07/1946,53,3,S,1,10,S,N,S,Encargado permanente con vivienda
-Daniel Feijo,M,2134,33460700,20 33460700 3,13/09/2005,26/10/2023,17/07/1977,65,10,S,4,16,S,S,S,Ayudante permanente con vivienda
-Felipe Daquino,M,4312,38500300,20 38500300 6,18/03/1995,26/10/2024,23/03/1963,40,2,N,3,20,C,N,S,intendente
+Legajo,Nombre,Sexo,DNI,CUIL,Fecha Ingreso,Fecha Actual,Nacimiento,Edad,Horas extra 50%,Horas extra 100%,Presentismo,Escala Salarial,Vacaciones,Estado Civil,Hijos,Puesto
+1234,Marcelo Parma,M,39300500,20 39300500 2,10-05-1999,26-10-2021,12-02-1985,44,0,2,S,2,7,C,S,Ayudante media jornada
+4321,Mariano Martignoni,M,35800600,20 35800600 4,15-06-2002,26-10-2022,11-07--1946,53,3,5,S,1,10,S,N,Encargado permanente con vivienda
+2134,Daniel Feijo,M,33460700,20 33460700 3,13-09-2005,26-10--2023,17-07-1977,65,10,1,S,4,16,S,S,Ayudante permanente con vivienda
+4312,Felipe Daquino,M,38500300,20 38500300 6,18-03-1995,26-10-2024,23-03--1963,40,2,8,N,3,20,C,N,intendente

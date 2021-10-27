@@ -1,8 +1,6 @@
 
 """Cosas que no deben faltar en la liquidación de sueldo:
 
-
-
 Antiguedad ()
 Sueldo basico (Según tabla de convenio)
 
@@ -25,15 +23,7 @@ Descuentos:
 Jubilación
 Obra Social
 
-"""
 
-"""
-A consultar:
-def completacuil():
-    # Con esta función determinamos el CUIL de cada empleado según su DNI (o sexo).
-
-def calculaedad(dd,mm,aa):
-    #Esta funcion debe determinar la edad del individuo a partir de la fecha de nacimiento del mismo.
 
 """
 
@@ -42,7 +32,6 @@ def calculaedad(dd,mm,aa):
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
 import csv
-import re
 import time
 import random
 import colored
@@ -57,13 +46,12 @@ from colored import stylize #Hacer en la terminal pip install termcolor
 df_categorias = pd.read_csv("categorias.csv")
 df_trabajadores = pd.read_csv("trabajadores.csv")
 matriz_trabajadores = np.loadtxt("trabajadores.csv", dtype=np.object, delimiter=",")
+matriz_planilla_salarial = np.loadtxt("planilla_salarial.csv", dtype=np.object, delimiter=",")
 
 
 # TERCERA PARTE - FUNCIONES
 
 def verificar_fecha(cad):
-    '''validacion='^(0\d|1[0-9]|2[0-9]|3[0-1])/(0\d|1[0-2])/(19[0-9]{2}|20[0-9]{2})$'
-    return bool(re.search(validacion,cad))'''
     fecha = cad.split("-") 
     year = fecha[2]
     month = fecha[1]
@@ -120,18 +108,7 @@ def verificar_letras_ingresadas(respuesta, opcion1, opcion2):
     return respuesta
     
 
-def solicitar_puesto(df_categorias):
-    time.sleep(1.5)
-    df_categorias[df_categorias["FUNCION"]].astype(str)
-    """Elija el puesto:
-    1 Supervisor   60000
-    2 Encargado 550000
-    3 Jardinero 40000
-    
-    sup
-    enc
-    jard
-    }"""
+
 
 # Opción 1
 def agregar_trabajador(matriz_trabajadores):
@@ -181,8 +158,12 @@ def agregar_trabajador(matriz_trabajadores):
     edad = fecha_actual - birthday
     trabajador.append(edad) 
 
-    horas_extras = input("Indique las horas extras totales del trabajador: ")
-    trabajador.append(horas_extras)
+    horas_extras_50 = input("Indique las horas extras totales del trabajador al 50%: ")
+    trabajador.append(horas_extras_50)
+
+        
+    horas_extras_100 = input("Indique las horas extras totales del trabajador al 100%: ")
+    trabajador.append(horas_extras_100)
 
     presentismo = input("Ingrese 's' para indicar que posee presentismo, o 'n' para indicar que no posee: ").toupper()
     presentismo_ = verificar_letras_ingresadas(presentismo, 'S', 'N')
@@ -205,12 +186,8 @@ def agregar_trabajador(matriz_trabajadores):
     hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
     trabajador.append(hijos_)
 
-    jubilacion = input("Ingrese 's' para indicar si tiene jubilacion, o 'n' para indicar que no: ").toupper()
-    jubilacion_ = verificar_letras_ingresadas(hijos, 'S', 'N')
-    trabajador.append(jubilacion_)
-    
-    puesto = solicitar_puesto(df_categorias)
-    trabajador.append(puesto)
+   
+    #trabajador.append(jubilacion_)
 
     matriz_trabajadores.append(trabajador)
     df_trabajadores = pandas.DataFrame(matriz_trabajadores)
@@ -245,11 +222,11 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
     print()
 
     for i in range(1, len(matriz_trabajadores)):
-        if legajo == int(matriz_trabajadores[i][2]):
+        if (legajo) == matriz_trabajadores[i][0]:
             time.sleep(1)
             print("El trabajador se encuentra dentro de los registros")
             print("Datos del trabajador")
-            print(df_trabajadores.loc[0,:])
+            #print(df_trabajadores.iloc[i, 0:])
             print(df_trabajadores.loc[i,:])
             print()
             print("A continuación será llevado de regreso al menú principal")
@@ -264,7 +241,7 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
         respuesta = int(input("Respuesta: "))
         
         while (respuesta != -1) and (respuesta != 0):
-            print("Por favor ingrese -1 para volver a intentar o 0 para cotinuar:")
+            print("Por favor ingrese -1 para volver a intentar o 0 para continuar:")
             respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
         if respuesta == -1:
@@ -276,13 +253,48 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 
 # Opción 4 
-def obtener_liquidacion():
+def editar_trabajador(legajo,):
+    ingresarlegajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
+
+    
     time.sleep(1.5)
+
+    '''
+    matriz_trabajadores.append(trabajador)
+    df_trabajadores = pandas.DataFrame(matriz_trabajadores)
+
+    time.sleep(1)
+    print("Trabajador agregado con exito, a continuacion sera llevado al menu principal")
+    print()
+    time.sleep(3.5)'''
 
     print("opción 4")
 
 
 # Opción 5
+def obtener_liquidacion(matriz_planilla_salarial):
+    """
+    
+    
+    Tengo que ver si la jubilacion y aporte obra social, cuota sindical se multiplican por el bruto 
+    inicial o por el bruto total HOLA MARTINNNNNNNNNN
+    
+    aporte_obra_social = bruto * 0.03
+    jubilacion= bruto * 0,11
+    aporte_obra_sindical= bruto * 0.02
+    antiguedad_total= antiguedad * int(matriz_planilla_salarial[8][1])
+
+    bruto_inicial = basico (aca hay que acceder al dato del sueldo segun el rango del empleado) + antiguedad_total + presentismo 
+    hs_ext_50 = (bruto_inicial /240) * horas_extras_50
+    hs_ext_100 = (bruto_inicial / 240) * horas_extras_100
+    
+    bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100
+    neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social
+    """
+    print("opcion 5")
+
+
+# Opción 6
 def imprimir_data(data_frame):
     time.sleep(1.5)
     print(data_frame)
@@ -292,7 +304,7 @@ def imprimir_data(data_frame):
     time.sleep(3.5)
 
 
-# Opción 6
+# Opción 7
 def finalizar_programa(morado, azul):
     time.sleep(1.5)
     print()
@@ -354,15 +366,16 @@ while corriendo:
     print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.3)
     print(stylize(" 2  -    ", morado), stylize("Dar de Baja Trabajador", azul)), time.sleep(0.3)
     print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 4  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
-    print(stylize(" 5  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
-    print(stylize(" 6  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
+    print(stylize(" 4  -    ", morado), stylize("Editar Trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 5  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
+    print(stylize(" 6  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
+    print(stylize(" 7  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
 
     print()
     opcion = int(input("Por favor seleccione una opción: "))
     print()
     
-    while (opcion < 1) or (opcion > 6):
+    while (opcion < 1) or (opcion > 7):
         print()
         print("Opción no válida")
         opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
@@ -374,8 +387,10 @@ while corriendo:
     elif (opcion == 3):
         consultar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 4):
-        obtener_liquidacion()
+        editar_trabajador(matriz_planilla_salarial)
     elif (opcion == 5):
+        obtener_liquidacion()
+    elif (opcion == 6):
         imprimir_data(df_trabajadores)
     else:
         corriendo = finalizar_programa(morado, azul)
