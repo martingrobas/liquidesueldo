@@ -61,14 +61,45 @@ matriz_trabajadores = np.loadtxt("trabajadores.csv", dtype=np.object, delimiter=
 
 # TERCERA PARTE - FUNCIONES
 
-def validafecha(cad): #funcion hecha por juli alagastin :D
-    validacion='^(0\d|1[0-9]|2[0-9]|3[0-1])/(0\d|1[0-2])/(19[0-9]{2}|20[0-9]{2})$'
-    return bool(re.search(validacion,cad))
+def verificar_fecha(cad):
+    '''validacion='^(0\d|1[0-9]|2[0-9]|3[0-1])/(0\d|1[0-2])/(19[0-9]{2}|20[0-9]{2})$'
+    return bool(re.search(validacion,cad))'''
+    fecha = cad.split("-") 
+    year = fecha[2]
+    month = fecha[1]
+    day = fecha[0]
 
-fecha=input("Ingrese fecha con el formato DD/MM/AAAA:")
+    es_bisiesto = False
+    if (year % 400 == 0) and (year % 4 == 0) and (year % 100 == 0):
+        es_bisiesto = True #bisiesto
 
-print(validafecha(fecha))
+    elif (year % 4 == 0) and (year % 100 == 0):
+        es_bisiesto = False  #no bisiesto
 
+    elif (year % 4 == 0):
+        es_bisiesto = True #bisiesto
+
+    es_valida = True
+    
+    if (day < 1):
+        es_valida = False
+
+    elif (month == 2) and (es_bisiesto == False) and (day > 28):
+        es_valida = False
+
+    elif (month == 2) and (es_bisiesto) and (day > 29):
+        es_valida = False
+
+    elif (month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12) or (day > 31):
+        es_valida = False
+
+    elif (month == 4) or (month == 6) or (month == 9) or (month == 11) or (day > 30):
+        es_valida = False
+
+    else:
+        print("Fecha válida")
+    
+    return es_valida
 
 
 def obtener_cuil(sexo, dni):
@@ -82,10 +113,15 @@ def obtener_cuil(sexo, dni):
     
     return cuil
 
-#DNI 36159460
-#CUIL 20 36159460 7
+def verificar_letras_ingresadas(respuesta, opcion1, opcion2):
+    while (respuesta != opcion1) or (respuesta != opcion):
+        print('No ingresó una letra válida')
+        respuesta = input("Por favor ingrese el formato solicitado: ").toupper()
+    return respuesta
+    
 
 def solicitar_puesto(df_categorias):
+    time.sleep(1.5)
     df_categorias[df_categorias["FUNCION"]].astype(str)
     """Elija el puesto:
     1 Supervisor   60000
@@ -97,13 +133,9 @@ def solicitar_puesto(df_categorias):
     jard
     }"""
 
-def verificar_fecha():
-    return True
-
-
 # Opción 1
 def agregar_trabajador(matriz_trabajadores):
-
+    time.sleep(1.5)
     trabajador = []
 
     # Nombres
@@ -112,10 +144,8 @@ def agregar_trabajador(matriz_trabajadores):
     
     # Letras
     sexo = input("Ingrese 'f' para femenino o 'm' para masculino\n").toupper()
-    while (sexo != 'F') or (sexo != 'M'):
-        print('No ingresó una letra válida')
-        sexo= input("Por favor ingrese 'f' para femenino o 'm' para masculino\n").toupper()
-    trabajador.append(sexo)
+    sexo_ = verificar_letras_ingresadas(sexo, 'F', 'M')
+    trabajador.append(sexo_)
     
 
     # Números
@@ -129,15 +159,15 @@ def agregar_trabajador(matriz_trabajadores):
     trabajador.append(cuil)
 
     fecha_ingreso = input("Indique la fecha de ingreso a la empresa (DD-MM-AAAA):\n")
-    ingreso = verificar_fecha(fecha_ingreso)
-    while not ingreso:
+    ingreso_correcto = verificar_fecha(fecha_ingreso)
+    while not ingreso_correcto:
         print('No ingresó una fecha válida')
-        birthday = input("Ingrese la fecha de ingreso a la empresa (DD-MM-AAAA):\n")
-        ingreso = verificar_fecha(ingreso)
+        birthday = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA):\n")
+        ingreso_correcto = verificar_fecha(ingreso_correcto)
     trabajador.append(fecha_ingreso)
 
     fecha_actual = datetime.today().strftime('%Y-%m-%d')
-    antiguedad = fecha_actual - fecha_ingreso     #En base a la fecha de ingreso se debe determinar la antiguedad (en años) con una función.
+    antiguedad = fecha_actual - fecha_ingreso
     trabajador.append(antiguedad)
     
     birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA):\n")
@@ -151,33 +181,66 @@ def agregar_trabajador(matriz_trabajadores):
     edad = fecha_actual - birthday
     trabajador.append(edad) 
 
+    horas_extras = input("Indique las horas extras totales del trabajador: ")
+    trabajador.append(horas_extras)
+
+    presentismo = input("Ingrese 's' para indicar que posee presentismo, o 'n' para indicar que no posee: ").toupper()
+    presentismo_ = verificar_letras_ingresadas(presentismo, 'S', 'N')
+    trabajador.append(presentismo_)
+
+    escala_salarial = solicitar_escala_salarial(df_categorias)
+    trabajador.append(escala_salarial)
+
+    vacaciones = input("Ingrese la cantidad de dias de vacaciones del trabajador: ")
+    while (vacaciones < 0) or (vacaciones > 100):
+        print('No ingresó un numero valido, este debe ser un entero positivo y no mayor a cien')
+        vacaciones= input("Ingrese la cantidad de dias de vacaciones del trabajador: ")
+    trabajador.append(vacaciones)
+
+    estado_civil = input("Ingrese 'c' para indicar que esta casado, o 's' para soltero: ").toupper()
+    estado_civil_ = verificar_letras_ingresadas(estado_civil, 'C', 'S')
+    trabajador.append(estado_civil_)
+
+    hijos = input("Ingrese 's' para indicar si tiene hijos, o 'n' para indicar que no: ").toupper()
+    hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
+    trabajador.append(hijos_)
+
+    jubilacion = input("Ingrese 's' para indicar si tiene jubilacion, o 'n' para indicar que no: ").toupper()
+    jubilacion_ = verificar_letras_ingresadas(hijos, 'S', 'N')
+    trabajador.append(jubilacion_)
+    
     puesto = solicitar_puesto(df_categorias)
     trabajador.append(puesto)
-    """Elija el puesto:
-    1 Supervisor   60000
-    2 Encargado 550000
-    3 Jardinero 40000
-    
-    sup
-    enc
-    jard
-    }"""
 
-    print("opción 1")
+    matriz_trabajadores.append(trabajador)
+    df_trabajadores = pandas.DataFrame(matriz_trabajadores)
+
+    time.sleep(1)
+    print("Trabajador agregado con exito, a continuacion sera llevado al menu principal")
+    print()
+    time.sleep(3.5)
+
 
 # Opción 2 
-def dar_de_baja(matriz_trabajadores,df_trabajadores): #FUNCION HECHA POR MARTINCITO :D
+def dar_de_baja(matriz_trabajadores,df_trabajadores):
+    time.sleep(1.5)
     darDeBaja=int(input("ingrese el legajo del trabajador que desea dar de baja"))
-    matriz_trabajadores=df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo']==darDeBaja].index, inplace=True)
-    print(df_trabajadores)
 
-    return matriz_trabajadores
-
-    print("opción 2")
+    try:
+        matriz_trabajadores=df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo']==darDeBaja].index, inplace=True)
+    except:
+        time.sleep(1)
+        print("No se pudo dar de baja al trabajador")
+        print("Por favor intente de nuevo y verifique que el legajo sea correcto")
+    finally:
+        time.sleep(1)
+        print("A continuación será llevado de regreso al menú principal")
+        print()
+        time.sleep(3.5)
 
 # Opción 3
 def consultar_trabajador(matriz_trabajadores, df_trabajadores):
-    time.sleep(1)
+    time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador que desea consultar: "))
     print()
 
@@ -214,24 +277,24 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 # Opción 4 
 def obtener_liquidacion():
-    
-    time.sleep(0.5)
+    time.sleep(1.5)
 
     print("opción 4")
 
+
 # Opción 5
 def imprimir_data(data_frame):
-    time.sleep(0.5)
+    time.sleep(1.5)
     print(data_frame)
     print()
     print("A continuación será llevado de regreso al menú principal")
     print()
-    time.sleep(2.5)
+    time.sleep(3.5)
 
 
 # Opción 6
 def finalizar_programa(morado, azul):
-    time.sleep(0.5)
+    time.sleep(1.5)
     print()
     print(stylize("Gracias por usar nuestro sistema de liquidación de sueldos", morado)), time.sleep(0.3)
     print(stylize("Por favor cuéntenos como ha sido su experiencia: ", morado)), time.sleep(0.3)
@@ -246,6 +309,7 @@ def finalizar_programa(morado, azul):
     ranking=int(input("Por favor seleccione un número del 1 al 5 en base a su nivel de satisfaccion: "))
 
     while ranking < 1 or ranking > 5:
+        time.sleep(0.5)
         print()
         print("Error, ingreso un valor valido")
         ranking=int(input("Por favor seleccione un número del 1 al 5 en base a su nivel de satisfaccion: "))
@@ -318,6 +382,3 @@ while corriendo:
 
 time.sleep(1.5)
 print("Hasta pronto!")
-
-    
-

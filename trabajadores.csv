@@ -1,6 +1,5 @@
-Nombre,Antiguedad,Sueldo Basico,Presentismo,Horas Extra,Direccion,Nacimiento ,DNI,Fecha de Ingreso,Escala Salarial,Vacaciones,Estado Civil,Con/sin Hijos,Jubilacion,Obra Social
-Pablo Escobar,3,20000,Si,3,Yapeyu 6060,13/06/1995,40538386,01/06/2018,2,7,Casado,No,si,si
-Juan Perez,5,25000,No,1,Salta 3030,23/02/1996,40538387,01/07/2018,1,14,Soltero,No,si,si
-Juana Gomez,15,40000,Si,10,Chile 2020,10/07/1970,30538387,01/08/2000,4,21,Casado,Si,si,si
-Susana Lopez,4,20000,Si,2,Mexico 4040,11/03/1985,35777888,01/09/2002,2,7,Soltero,No,si,si
-Felipe Daquino,10,30000,No,15,Lima 5050,27/09/1973,32999216,01/10/2004,4,7,Casado,Si,si,si
+Nombre,Sexo,Legajo,DNI,CUIL,Fecha Ingreso,Fecha Actual,Nacimiento,Edad,Horas extra,Presentismo,Escala Salarial,Vacaciones,Estado Civil,Hijos,Jubilacion,Puesto
+Marcelo Parma,M,1234,39300500,20 39300500 2,10/05/1999,26/10/2021,12/02/1985,44,0,S,2,7,C,S,N,Ayudante media jornada
+Mariano Martignoni,M,4321,35800600,20 35800600 4,15/06/2002,26/10/2022,11/07/1946,53,3,S,1,10,S,N,S,Encargado permanente con vivienda
+Daniel Feijo,M,2134,33460700,20 33460700 3,13/09/2005,26/10/2023,17/07/1977,65,10,S,4,16,S,S,S,Ayudante permanente con vivienda
+Felipe Daquino,M,4312,38500300,20 38500300 6,18/03/1995,26/10/2024,23/03/1963,40,2,N,3,20,C,N,S,intendente
