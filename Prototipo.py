@@ -253,7 +253,9 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 
 # Opción 4 
-def editar_trabajador(legajo,):
+def editar_trabajador(matriz_trabajadores):
+    trabajador = []
+
     ingresarlegajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
 
     
@@ -264,7 +266,7 @@ def editar_trabajador(legajo,):
     df_trabajadores = pandas.DataFrame(matriz_trabajadores)
 
     time.sleep(1)
-    print("Trabajador agregado con exito, a continuacion sera llevado al menu principal")
+    print("Trabajador modificado con exito, a continuacion sera llevado al menu principal")
     print()
     time.sleep(3.5)'''
 
