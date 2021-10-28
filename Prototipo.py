@@ -1,31 +1,4 @@
 
-"""Cosas que no deben faltar en la liquidación de sueldo:
-
-Antiguedad ()
-Sueldo basico (Según tabla de convenio)
-
-Presentismo (+)
-Horas extras (+)
-
-Direccion
-Nacimiento
-Datos filiatorios
-DNI
-
-Fecha de ingreso
-Escala salarial
-Vacaciones
-Soltero o Casado
-Con o sin hijos
-
-
-Descuentos:
-Jubilación
-Obra Social
-
-
-
-"""
 
 
 
@@ -45,8 +18,10 @@ from colored import stylize #Hacer en la terminal pip install termcolor
 #------ Carga de datos ------#
 df_categorias = pd.read_csv("categorias.csv")
 df_trabajadores = pd.read_csv("trabajadores.csv")
-matriz_trabajadores = np.loadtxt("trabajadores.csv", dtype=np.object, delimiter=",")
-matriz_planilla_salarial = np.loadtxt("planilla_salarial.csv", dtype=np.object, delimiter=",")
+df_planilla_salarial = pd.read_csv("planilla_salarial.csv")
+df_trabajadores.values.tolist()
+matriz_trabajadores = df_trabajadores.values.tolist()
+matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 
 
 # TERCERA PARTE - FUNCIONES
