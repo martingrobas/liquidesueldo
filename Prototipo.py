@@ -1,18 +1,13 @@
-
-
-
-
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
-import csv
 import time
 import random
 import colored
-import numpy as np
 import pandas as pd  # Hacer en la terminal pip install numpy y NumPy y luego pip install pandas
-from datetime import datetime
+from datetime import datetime, date
 from colored import stylize #Hacer en la terminal pip install termcolor
 
+import datetime 
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
@@ -21,15 +16,19 @@ df_trabajadores = pd.read_csv("trabajadores.csv")
 df_planilla_salarial = pd.read_csv("planilla_salarial.csv")
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
+matriz_categorias = df_categorias.values.tolist()
 
 
 # TERCERA PARTE - FUNCIONES
 
 def verificar_fecha(cad):
     fecha = cad.split("-") 
-    year = fecha[2]
-    month = fecha[1]
-    day = fecha[0]
+    year = int(fecha[2])
+    print(year)
+    month = int(fecha[1])
+    print(month)
+    day = int(fecha[0])
+    print(day)
 
     es_bisiesto = False
     if (year % 400 == 0) and (year % 4 == 0) and (year % 100 == 0):
@@ -52,17 +51,18 @@ def verificar_fecha(cad):
     elif (month == 2) and (es_bisiesto) and (day > 29):
         es_valida = False
 
-    elif (month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12) or (day > 31):
+    elif (month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12) and (day > 31):
         es_valida = False
 
-    elif (month == 4) or (month == 6) or (month == 9) or (month == 11) or (day > 30):
+    elif (month == 4) or (month == 6) or (month == 9) or (month == 11) and (day > 30):
         es_valida = False
-
-    else:
-        print("Fecha válida")
     
     return es_valida
 
+
+
+def calcular_diferencia( menor_fecha, mayor_fecha ): 
+    return (mayor_fecha.year - menor_fecha.year) + (1 if (mayor_fecha.day >= menor_fecha.day) and (mayor_fecha.month >= menor_fecha.month) else 0) 
 
 def obtener_cuil(sexo, dni):
     cuil = ''
@@ -81,49 +81,37 @@ def verificar_letras_ingresadas(respuesta, opcion1, opcion2):
         respuesta = input("Por favor ingrese el formato solicitado: ").upper()
     return respuesta
     
-def solicitar_puesto(matriz_categorias):
+def solicitar_puesto(categorias, azul, morado):
     time.sleep(1.5)
+    
     print()
     print("A continuacion de le mostrará los distintos puestos para que indique una opciónÑ"), time.sleep(0.7)
     print(stylize("Puestos: ", morado)), time.sleep(0.3)
-    print(stylize(" 1  -    ", morado), stylize("Encargado Permanente con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 2  -    ", morado), stylize("Encargado Permanente sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 3  -    ", morado), stylize("Ayudante Permanente con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 4  -    ", morado), stylize("Ayudante Permanente sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 5  -    ", morado), stylize("Ayudante Media jornada", azul)), time.sleep(0.3)
-    print(stylize(" 6  -    ", morado), stylize("Personal Asimilado Con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 7  -    ", morado), stylize("Personal Asimilado Sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 8  -    ", morado), stylize("Mayordomo Con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 9  -    ", morado), stylize("Mayordomo Sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 10 -    ", morado), stylize("Intendente", azul)), time.sleep(0.3)
-    print(stylize(" 11 -    ", morado), stylize("Personal con mas 1 Funcion con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 12 -    ", morado), stylize("Personal con mas 1 Funcion sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 13 -    ", morado), stylize("Encargado Guardacoches con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 14 -    ", morado), stylize("Encargado Guardacoches sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 15 -    ", morado), stylize("Personal Vigilancia Nocturna", azul)), time.sleep(0.3)
-    print(stylize(" 16 -    ", morado), stylize("Personal Vigilancia Diurna", azul)), time.sleep(0.3)
-    print(stylize(" 17 -    ", morado), stylize("Personal Vigilancia Media Jornada", azul)), time.sleep(0.3)
-    print(stylize(" 18 -    ", morado), stylize("Encargado No Permanente Con vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 19 -    ", morado), stylize("Encargado No Permanente Sin vivienda", azul)), time.sleep(0.3)
-    print(stylize(" 20 -    ", morado), stylize("Ayudante Temporario", azul)), time.sleep(0.3)
-    print(stylize(" 21 -    ", morado), stylize("Ayudante Temporario Media Jornada", azul)), time.sleep(0.3)
+    for i in range(len(categorias)):
+        print(stylize(f" {i}  -    ", morado), stylize(categorias[i][0], azul)), time.sleep(0.3)
     print()
 
     time.sleep(1)
-    ranking=int(input("Por favor seleccione un número del 1 al 21 en base a su nivel de satisfaccion: "))
-
-    while ranking < 1 or ranking > 5:
+    puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
+    while puesto < 1 or puesto > 21:
         time.sleep(0.5)
         print()
-        print("Error, ingreso un valor valido")
-        ranking=int(input("Por favor seleccione un número del 1 al 5 en base a su nivel de satisfaccion: "))
+        print("Error, ingresó un valor valido")
+        puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
+
+    puesto = categorias[puesto - 1][0]
+    return puesto
 
 
 
 # Opción 1
-def agregar_trabajador(matriz_trabajadores):
+def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     time.sleep(1.5)
     trabajador = []
+
+    # Dato principal
+    legajo=int(input("Ingrese el legajo del trabajador: "))
+    trabajador.append(legajo)
 
     # Nombres
     nombre = input("Ingrese el nombre y apellido: ")
@@ -133,12 +121,9 @@ def agregar_trabajador(matriz_trabajadores):
     sexo = input("Ingrese 'f' para femenino o 'm' para masculino: ").upper()
     sexo = verificar_letras_ingresadas(sexo, 'F', 'M')
     trabajador.append(sexo)
-    print(trabajador)
     
 
-    # Números
-    legajo=int(input("Ingrese el legado del trabajador: "))
-    trabajador.append(legajo)
+    #Numeros
 
     dni=int(input("Ingrese el DNI: "))
     trabajador.append(dni)
@@ -150,13 +135,14 @@ def agregar_trabajador(matriz_trabajadores):
     ingreso_correcto = verificar_fecha(fecha_ingreso)
     while not ingreso_correcto:
         print('No ingresó una fecha válida')
-        birthday = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA): ")
-        ingreso_correcto = verificar_fecha(ingreso_correcto)
+        fecha_ingreso = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA): ")
+        ingreso_correcto = verificar_fecha(fecha_ingreso)
     trabajador.append(fecha_ingreso)
-
-    fecha_actual = datetime.today().strftime('%Y-%m-%d')
-    antiguedad = fecha_actual - fecha_ingreso
+    
+    fecha_ingreso = fecha_ingreso.split('-')
+    antiguedad = calcular_diferencia(date(int(fecha_ingreso[2]), int(fecha_ingreso[1]), int(fecha_ingreso[0])), datetime.date.today())
     trabajador.append(antiguedad)
+    print(trabajador)
     
     birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
     cumple = verificar_fecha(birthday)
@@ -166,8 +152,9 @@ def agregar_trabajador(matriz_trabajadores):
         cumple = verificar_fecha(birthday)
     trabajador.append(birthday)
         
-    edad = fecha_actual - birthday
+    edad = calcular_diferencia(date(int(birthday[2]), int(birthday[1]), int(birthday[0])), datetime.date.today())
     trabajador.append(edad) 
+    print(trabajador)
 
     horas_extras_50 = input("Indique las horas extras totales del trabajador al 50%: ")
     trabajador.append(horas_extras_50)
@@ -177,8 +164,8 @@ def agregar_trabajador(matriz_trabajadores):
     trabajador.append(horas_extras_100)
 
     presentismo = input("Ingrese 's' para indicar que posee presentismo, o 'n' para indicar que no posee: ").upper()
-    presentismo_ = verificar_letras_ingresadas(presentismo, 'S', 'N')
-    trabajador.append(presentismo_)
+    presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
+    trabajador.append(presentismo)
 
     vacaciones = input("Ingrese la cantidad de dias de vacaciones del trabajador: ")
     while (vacaciones < 0) or (vacaciones > 100):
@@ -194,14 +181,14 @@ def agregar_trabajador(matriz_trabajadores):
     hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
     trabajador.append(hijos_)
 
-    puesto = solicitar_puesto()
+    puesto = solicitar_puesto(matriz_categorias, azul, morado)
     trabajador.append(puesto)
 
     matriz_trabajadores.append(trabajador)
     df_trabajadores = pd.DataFrame(matriz_trabajadores)
 
     time.sleep(1)
-    print("Trabajador agregado con exito, a continuacion sera llevado al menu principal")
+    print("Trabajador agregado con éxito, a continuación será llevado al menu principal")
     print()
     time.sleep(3.5)
 
@@ -390,7 +377,7 @@ while corriendo:
         opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
 
     if (opcion == 1):
-        agregar_trabajador(matriz_trabajadores)  
+        agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado)  
     elif (opcion == 2):
         dar_de_baja(matriz_trabajadores, df_trabajadores)
     elif (opcion == 3):
