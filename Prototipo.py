@@ -11,9 +11,9 @@ import datetime
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df_categorias = pd.read_csv("categorias.csv")
-df_trabajadores = pd.read_csv("trabajadores.csv")
-df_planilla_salarial = pd.read_csv("planilla_salarial.csv")
+df_categorias = pd.read_csv("./csv_files/categorias.csv")
+df_trabajadores = pd.read_csv("./csv_files/trabajadores.csv")
+df_planilla_salarial = pd.read_csv("./csv_files/planilla_salarial.csv")
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
@@ -21,7 +21,7 @@ matriz_categorias = df_categorias.values.tolist()
 
 # TERCERA PARTE - FUNCIONES
 
-def verificar_fecha(cad):
+def verificar_fecha(cad, fecha_actual):
     fecha = cad.split("-") 
     year = int(fecha[2])
     print(year)
@@ -44,6 +44,12 @@ def verificar_fecha(cad):
     
     if (day < 1):
         es_valida = False
+    
+    elif (month > 12):
+        es_valida = False
+    
+    elif (year > fecha_actual.year):
+        es_valida = False
 
     elif (month == 2) and (es_bisiesto == False) and (day > 28):
         es_valida = False
@@ -51,18 +57,16 @@ def verificar_fecha(cad):
     elif (month == 2) and (es_bisiesto) and (day > 29):
         es_valida = False
 
-    elif (month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12) and (day > 31):
+    elif (day > 31) and ((month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12)):
         es_valida = False
 
-    elif (month == 4) or (month == 6) or (month == 9) or (month == 11) and (day > 30):
+    elif (day > 30) and ((month == 4) or (month == 6) or (month == 9) or (month == 11)):
         es_valida = False
     
     return es_valida
 
-
-
 def calcular_diferencia( menor_fecha, mayor_fecha ): 
-    return (mayor_fecha.year - menor_fecha.year) + (1 if (mayor_fecha.day >= menor_fecha.day) and (mayor_fecha.month >= menor_fecha.month) else 0) 
+    return (mayor_fecha.year - menor_fecha.year) + (1 if ((menor_fecha.month <= mayor_fecha.month) and (menor_fecha.day <= mayor_fecha.day)) else 0) 
 
 def obtener_cuil(sexo, dni):
     cuil = ''
@@ -85,10 +89,10 @@ def solicitar_puesto(categorias, azul, morado):
     time.sleep(1.5)
     
     print()
-    print("A continuacion de le mostrará los distintos puestos para que indique una opciónÑ"), time.sleep(0.7)
+    print("A continuacion de le mostrará los distintos puestos para que indique una opción"), time.sleep(0.7)
     print(stylize("Puestos: ", morado)), time.sleep(0.3)
     for i in range(len(categorias)):
-        print(stylize(f" {i}  -    ", morado), stylize(categorias[i][0], azul)), time.sleep(0.3)
+        print(stylize(f" {i + 1}  -    ", morado), stylize(categorias[i][0], azul)), time.sleep(0.3)
     print()
 
     time.sleep(1)
@@ -111,6 +115,8 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
 
     # Dato principal
     legajo=int(input("Ingrese el legajo del trabajador: "))
+    while str(legajo) in matriz_trabajadores:
+        legajo=int(input("El legajo ya pertenece a otro trabajador, por favor ingrese uno nuevo: "))
     trabajador.append(legajo)
 
     # Nombres
@@ -126,17 +132,19 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     #Numeros
 
     dni=int(input("Ingrese el DNI: "))
+    while str(dni) in matriz_trabajadores:
+        dni=int(input("Esa persona ya se encuentra registrada, por favor ingrese nuevamente el DNI: "))
     trabajador.append(dni)
 
     cuil = obtener_cuil(sexo, dni)
     trabajador.append(cuil)
 
     fecha_ingreso = input("Indique la fecha de ingreso a la empresa (DD-MM-AAAA): ")
-    ingreso_correcto = verificar_fecha(fecha_ingreso)
+    ingreso_correcto = verificar_fecha(fecha_ingreso, datetime.date.today())
     while not ingreso_correcto:
         print('No ingresó una fecha válida')
         fecha_ingreso = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA): ")
-        ingreso_correcto = verificar_fecha(fecha_ingreso)
+        ingreso_correcto = verificar_fecha(fecha_ingreso, datetime.date.today())
     trabajador.append(fecha_ingreso)
     
     fecha_ingreso = fecha_ingreso.split('-')
@@ -145,13 +153,14 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     print(trabajador)
     
     birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
-    cumple = verificar_fecha(birthday)
+    cumple = verificar_fecha(birthday, datetime.date.today())
     while not cumple:
         print('No ingresó una fecha válida')
         birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
-        cumple = verificar_fecha(birthday)
+        cumple = verificar_fecha(birthday, datetime.date.today())
     trabajador.append(birthday)
         
+    birthday = birthday.split('-')
     edad = calcular_diferencia(date(int(birthday[2]), int(birthday[1]), int(birthday[0])), datetime.date.today())
     trabajador.append(edad) 
     print(trabajador)
@@ -167,10 +176,10 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
     trabajador.append(presentismo)
 
-    vacaciones = input("Ingrese la cantidad de dias de vacaciones del trabajador: ")
+    vacaciones = int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
     while (vacaciones < 0) or (vacaciones > 100):
         print('No ingresó un numero valido, este debe ser un entero positivo y no mayor a cien')
-        vacaciones= input("Ingrese la cantidad de dias de vacaciones del trabajador: ")
+        vacaciones= int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
     trabajador.append(vacaciones)
 
     estado_civil = input("Ingrese 'c' para indicar que esta casado, o 's' para soltero: ").upper()
@@ -186,6 +195,7 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
 
     matriz_trabajadores.append(trabajador)
     df_trabajadores = pd.DataFrame(matriz_trabajadores)
+    df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',')
 
     time.sleep(1)
     print("Trabajador agregado con éxito, a continuación será llevado al menu principal")
