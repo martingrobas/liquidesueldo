@@ -1,13 +1,16 @@
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
+# PRIMERA PARTE - IMPORTACIONES
+#------ Se hacen los importes necesarios ------#
 import time
 import random
 import colored
-import pandas as pd  # Hacer en la terminal pip install numpy y NumPy y luego pip install pandas
+from funcs import *
+import pandas as pd
 from datetime import datetime, date
-from colored import stylize #Hacer en la terminal pip install termcolor
+from colored import stylize
 
-import datetime 
+
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
@@ -19,94 +22,6 @@ matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
 
 
-# TERCERA PARTE - FUNCIONES
-
-def verificar_fecha(cad, fecha_actual):
-    fecha = cad.split("-") 
-    year = int(fecha[2])
-    print(year)
-    month = int(fecha[1])
-    print(month)
-    day = int(fecha[0])
-    print(day)
-
-    es_bisiesto = False
-    if (year % 400 == 0) and (year % 4 == 0) and (year % 100 == 0):
-        es_bisiesto = True #bisiesto
-
-    elif (year % 4 == 0) and (year % 100 == 0):
-        es_bisiesto = False  #no bisiesto
-
-    elif (year % 4 == 0):
-        es_bisiesto = True #bisiesto
-
-    es_valida = True
-    
-    if (day < 1):
-        es_valida = False
-    
-    elif (month > 12):
-        es_valida = False
-    
-    elif (year > fecha_actual.year):
-        es_valida = False
-
-    elif (month == 2) and (es_bisiesto == False) and (day > 28):
-        es_valida = False
-
-    elif (month == 2) and (es_bisiesto) and (day > 29):
-        es_valida = False
-
-    elif (day > 31) and ((month == 1) or (month == 3) or (month == 5) or (month == 7) or (month == 8) or (month == 10) or (month == 12)):
-        es_valida = False
-
-    elif (day > 30) and ((month == 4) or (month == 6) or (month == 9) or (month == 11)):
-        es_valida = False
-    
-    return es_valida
-
-def calcular_diferencia( menor_fecha, mayor_fecha ): 
-    return (mayor_fecha.year - menor_fecha.year) + (1 if ((menor_fecha.month <= mayor_fecha.month) and (menor_fecha.day <= mayor_fecha.day)) else 0) 
-
-def obtener_cuil(sexo, dni):
-    cuil = ''
-    if sexo == "F":
-        num = random.randint(1, 10)
-        cuil = '27' + ' ' + str(dni) + ' ' + str(num) 
-    else:
-        num = random.randint(1, 10)
-        cuil = '20' + ' ' + str(dni) + ' ' + str(num) 
-    
-    return cuil
-
-def verificar_letras_ingresadas(respuesta, opcion1, opcion2):
-    while (respuesta != opcion1) and (respuesta != opcion2):
-        print('No ingresó una letra válida')
-        respuesta = input("Por favor ingrese el formato solicitado: ").upper()
-    return respuesta
-    
-def solicitar_puesto(categorias, azul, morado):
-    time.sleep(1.5)
-    
-    print()
-    print("A continuacion de le mostrará los distintos puestos para que indique una opción"), time.sleep(0.7)
-    print(stylize("Puestos: ", morado)), time.sleep(0.3)
-    for i in range(len(categorias)):
-        print(stylize(f" {i + 1}  -    ", morado), stylize(categorias[i][0], azul)), time.sleep(0.3)
-    print()
-
-    time.sleep(1)
-    puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
-    while puesto < 1 or puesto > 21:
-        time.sleep(0.5)
-        print()
-        print("Error, ingresó un valor valido")
-        puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
-
-    puesto = categorias[puesto - 1][0]
-    return puesto
-
-
 
 # Opción 1
 def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
@@ -115,8 +30,10 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
 
     # Dato principal
     legajo=int(input("Ingrese el legajo del trabajador: "))
-    while str(legajo) in matriz_trabajadores:
+    existe_trabajador = verificar_existencia(legajo)
+    while existe_trabajador:
         legajo=int(input("El legajo ya pertenece a otro trabajador, por favor ingrese uno nuevo: "))
+        existe_trabajador = verificar_existencia(legajo)
     trabajador.append(legajo)
 
     # Nombres
@@ -132,8 +49,10 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     #Numeros
 
     dni=int(input("Ingrese el DNI: "))
-    while str(dni) in matriz_trabajadores:
+    existe_trabajador = verificar_existencia(dni)
+    while existe_trabajador():
         dni=int(input("Esa persona ya se encuentra registrada, por favor ingrese nuevamente el DNI: "))
+        existe_trabajador = verificar_existencia(dni)
     trabajador.append(dni)
 
     cuil = obtener_cuil(sexo, dni)
@@ -172,7 +91,7 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     horas_extras_100 = input("Indique las horas extras totales del trabajador al 100%: ")
     trabajador.append(horas_extras_100)
 
-    presentismo = input("Ingrese 's' para indicar que posee presentismo, o 'n' para indicar que no posee: ").upper()
+    presentismo = input("Ingrese 's' para indicar si cumplió con el presentismo, o 'n' para indicar que no: ").upper()
     presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
     trabajador.append(presentismo)
 
@@ -195,21 +114,89 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
 
     matriz_trabajadores.append(trabajador)
     df_trabajadores = pd.DataFrame(matriz_trabajadores)
-    df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',')
+    df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
 
     time.sleep(1)
     print("Trabajador agregado con éxito, a continuación será llevado al menu principal")
     print()
     time.sleep(3.5)
 
+""" # ARREGLAR MARTIN EN FORMATO DEL PROYECTO ACTUAL
+def elegir_trabajador():
+    
+    legajo = input("Ingrese el legajo del trabajador: ")
+
+    if verificar_existencia(legajo) == False:
+        print("El trabajador no existe.")
+        return elegir_trabajador()
+    
+    # preguntar que informacion quiere ver
+    time.sleep(1.5)
+    print()
+    print(stylize("Por favor elija una opcion: ", morado)), time.sleep(0.3)
+    print(stylize(" 1  -    ", morado), stylize("Ver toda la información del trabajador", azul)), time.sleep(0.3)
+    print(stylize(" 2  -    ", morado), stylize("Seleccionar información/atributos específicos", azul)), time.sleep(0.3)
+    print(stylize(" 3  -    ", morado), stylize("Volver al menú principal", azul)), time.sleep(0.3)
+    print()
+    
+    # obenter input
+    try:
+        option = int(input("Seleccione una opción: "))
+    except ValueError:
+        print("Error: Debe ingresar un número entero.")
+        return elegir_trabajador()
+    
+    
+    # check input
+    while option < 1 or option > 3:
+        print("Error: Debe ingresar un número entre 1 y 3.")
+        option = int(input("Seleccione una opción: "))
+        
+    
+    if option == 1:
+        info = GetTrabajador(legajo)
+        for data in info:
+            print(data)
+
+        return elegir_trabajador()        
+    
+    elif option == 2:
+        # input should be a list
+        atributo = input("Ingrese el/los atributo que desea ver (separados por ' , '): ")
+        atributos = atributo.split(", ")
+        for atributo in atributos:
+            # capitalize first letter
+            atributos[atributos.index(atributo)] = atributo.capitalize()
+        
+        info = GetTrabajador(legajo)
+        valid_datos = {
+             # key / indes
+             "Nombre": 1, "Sexo" : 2, "DNI" : 3, "CUIL" : 4, "Fecha" : 5, "Ingreso" : 6, "Fecha" : 7,
+            "Actual" :8, "Nacimiento" : 9, "Edad" : 10, "Horas extra 50%" : 11, "Horas extra 100%" : 12,
+            "Presentismo" : 13, "Escala Salarial" : 14, "Vacaciones" : 15 , "Estado Civil" : 16 ,"Hijos" : 17,
+            "Puesto" : 18
+            }
+        
+        for atributo in atributos:
+            if atributo in valid_datos:
+                print(info[valid_datos[atributo]])
+            
+            else:
+                print(f"El atributo \"{atributo}\" No existe.")
+                
+        return elegir_trabajador()
+    
+    elif option == 3:
+        return ShowMenu() """
+
 
 # Opción 2 
-def dar_de_baja(matriz_trabajadores,df_trabajadores):
+def dar_de_baja(df_trabajadores):
     time.sleep(1.5)
-    darDeBaja=int(input("ingrese el legajo del trabajador que desea dar de baja"))
+    dar_de_baja = int(input("ingrese el legajo del trabajador que desea dar de baja: "))
 
     try:
-        matriz_trabajadores = df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == darDeBaja].index, inplace=True)
+        df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == dar_de_baja].index, inplace=True)
     except:
         time.sleep(1)
         print("No se pudo dar de baja al trabajador")
@@ -240,8 +227,8 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
     else:
         time.sleep(1)
         print("El trabajador no se encuentra dentro de los registros"), time.sleep(1.5)
-        print("Desea volver a intentarlo?")
-        print("Ingrese -1 para volver a intentar o 0 para cotinuar:")
+        print("¿Desea volver a intentarlo?")
+        print("Ingrese -1 para volver a intentar o 0 para continuar:")
         respuesta = int(input("Respuesta: "))
         
         while (respuesta != -1) and (respuesta != 0):
@@ -251,16 +238,33 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
         if respuesta == -1:
             consultar_trabajador(matriz_trabajadores, df_trabajadores)
         else:
-            print("Entendido, será llevado de regreso al menú principal")
+            print("Entendido, será llevado de regreso al menú principal.")
             print()
             time.sleep(3.5)
 
 
 # Opción 4 
-def editar_trabajador(matriz_trabajadores):
+def editar_trabajador(matriz_trabajadores, morado, azul):
     trabajador = []
 
-    ingresarlegajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
+    legajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
+
+    print()
+    print(stylize("Opciones:", morado))
+    for i in range(len(matriz_trabajadores)):
+        print(stylize(f" {i + 1}  -    ", morado), stylize(matriz_trabajadores[0][i], azul)), time.sleep(0.3)
+    print()
+
+    dato = int(input("Por favor indique que desea modificar:"))
+    while (dato < 1) or (dato > 16):
+        print("Por favor un indique un numero correspondiente a alguna opcion")
+        dato = int(input("Ingrese que desea modificar:"))
+
+    for i in range(len(matriz_trabajadores)):
+        if legajo == matriz_trabajadores[i][0]:
+            nuevo_dato = input('Por favor ingrese el nuevo dato a colocar: ')
+            matriz_trabajadores[i][d]
+
 
     
     time.sleep(1.5)
@@ -278,19 +282,18 @@ def editar_trabajador(matriz_trabajadores):
 
 
 # Opción 5
-def obtener_liquidacion(matriz_planilla_salarial):
+def obtener_liquidacion(matriz_planilla_salarial, categorias):
     """
     
     
-    Tengo que ver si la jubilacion y aporte obra social, cuota sindical se multiplican por el bruto 
-    inicial o por el bruto total HOLA MARTINNNNNNNNNN
     
-    aporte_obra_social = bruto * 0.03
-    jubilacion= bruto * 0,11
-    aporte_obra_sindical= bruto * 0.02
+    bruto_inicial = categorias[i][1] basico (aca hay que acceder al dato del sueldo segun el rango del empleado) + antiguedad_total + presentismo
+
+    aporte_obra_social = bruto_inicial * 0.03
+    jubilacion= bruto_inicial * 0,11
+    aporte_obra_sindical= bruto_inicial * 0.02
     antiguedad_total= antiguedad * int(matriz_planilla_salarial[8][1])
 
-    bruto_inicial = basico (aca hay que acceder al dato del sueldo segun el rango del empleado) + antiguedad_total + presentismo 
     hs_ext_50 = (bruto_inicial /240) * horas_extras_50
     hs_ext_100 = (bruto_inicial / 240) * horas_extras_100
     
@@ -389,7 +392,7 @@ while corriendo:
     if (opcion == 1):
         agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado)  
     elif (opcion == 2):
-        dar_de_baja(matriz_trabajadores, df_trabajadores)
+        dar_de_baja(df_trabajadores)
     elif (opcion == 3):
         consultar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 4):
