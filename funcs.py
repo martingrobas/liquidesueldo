@@ -14,6 +14,7 @@ df_planilla_salarial = pd.read_csv("./csv_files/planilla_salarial.csv")
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
+lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extra 50%', 'Horas extra 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
 
 
 # TERCERA PARTE - FUNCIONES
@@ -112,8 +113,8 @@ def solicitar_puesto(categorias, azul, morado):
         puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
 
     puesto = categorias[puesto - 1][0]
-    basico = int(categorias[puesto - 1][1])
-    return puesto, basico
+    return puesto
+trabajadores_path = "trabajadores.csv"
 
 
 
