@@ -113,7 +113,8 @@ def solicitar_puesto(categorias, azul, morado):
         puesto = int(input("Por favor seleccione un número del 1 al 21 para indicar el puesto del trabajador: "))
 
     puesto = categorias[puesto - 1][0]
-    return puesto
+    basico = int(categorias[puesto - 1][1])
+    return puesto, basico
 trabajadores_path = "trabajadores.csv"
 
 

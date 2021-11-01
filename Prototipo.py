@@ -50,7 +50,7 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
 
     dni=int(input("Ingrese el DNI: "))
     existe_trabajador = verificar_existencia(dni)
-    while existe_trabajador():
+    while existe_trabajador:
         dni=int(input("Esa persona ya se encuentra registrada, por favor ingrese nuevamente el DNI: "))
         existe_trabajador = verificar_existencia(dni)
     trabajador.append(dni)
@@ -59,30 +59,28 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     trabajador.append(cuil)
 
     fecha_ingreso = input("Indique la fecha de ingreso a la empresa (DD-MM-AAAA): ")
-    ingreso_correcto = verificar_fecha(fecha_ingreso, datetime.date.today())
+    ingreso_correcto = verificar_fecha(fecha_ingreso, date.today())
     while not ingreso_correcto:
         print('No ingresó una fecha válida')
         fecha_ingreso = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA): ")
-        ingreso_correcto = verificar_fecha(fecha_ingreso, datetime.date.today())
+        ingreso_correcto = verificar_fecha(fecha_ingreso, date.today())
     trabajador.append(fecha_ingreso)
     
     fecha_ingreso = fecha_ingreso.split('-')
-    antiguedad = calcular_diferencia(date(int(fecha_ingreso[2]), int(fecha_ingreso[1]), int(fecha_ingreso[0])), datetime.date.today())
+    antiguedad = calcular_diferencia(date(int(fecha_ingreso[2]), int(fecha_ingreso[1]), int(fecha_ingreso[0])), date.today())
     trabajador.append(antiguedad)
-    print(trabajador)
     
     birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
-    cumple = verificar_fecha(birthday, datetime.date.today())
+    cumple = verificar_fecha(birthday, date.today())
     while not cumple:
         print('No ingresó una fecha válida')
         birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
-        cumple = verificar_fecha(birthday, datetime.date.today())
+        cumple = verificar_fecha(birthday, date.today())
     trabajador.append(birthday)
         
     birthday = birthday.split('-')
-    edad = calcular_diferencia(date(int(birthday[2]), int(birthday[1]), int(birthday[0])), datetime.date.today())
+    edad = calcular_diferencia(date(int(birthday[2]), int(birthday[1]), int(birthday[0])), date.today())
     trabajador.append(edad) 
-    print(trabajador)
 
     horas_extras_50 = input("Indique las horas extras totales del trabajador al 50%: ")
     trabajador.append(horas_extras_50)
@@ -283,7 +281,7 @@ def editar_trabajador(matriz_trabajadores, morado, azul):
 
 
 # Opción 5
-def obtener_liquidacion(matriz_trabajadores, df_categorias, azul, morado):
+def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, azul, morado):
     
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador del cual desea obtener su liquidación: "))
@@ -465,7 +463,7 @@ while corriendo:
     elif (opcion == 4):
         editar_trabajador(matriz_planilla_salarial)
     elif (opcion == 5):
-        obtener_liquidacion(matriz_planilla_salarial,df_categorias,azul,morado)
+        obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores,df_categorias,azul,morado)
     elif (opcion == 6):
         imprimir_data(df_trabajadores)
     else:
