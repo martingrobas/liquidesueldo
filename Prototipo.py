@@ -292,16 +292,16 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, a
             time.sleep(1)
             print("El trabajador se encuentra dentro de los registros, se procederá a calcular su liquidación.")
 
-            antiguedad_total = int(matriz_trabajadores[i][6]) * int(planilla_salarial[7][1])
+            antiguedad_total = int(matriz_trabajadores[i][6]) * float(planilla_salarial[7][1])
 
             # A fines prácticos, si se cumple con el presentismo se considerará un 10% del salario BASICO según categoría.
 
             if ((matriz_trabajadores[i][11]) == "S"):
-                presentismo = int(matriz_trabajadores[i][16]) * 0.1
+                presentismo = float(matriz_trabajadores[i][16]) * 0.1
             else:
                 presentismo = 0
 
-            bruto_inicial = int(matriz_trabajadores[i][16]) + antiguedad_total + presentismo
+            bruto_inicial = float(matriz_trabajadores[i][16]) + antiguedad_total + presentismo
             #El primer item es el que accede al dato del sueldo basico segun el rango del empleado.
 
             #Deducciones
@@ -314,7 +314,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, a
             hs_ext_100 = (bruto_inicial / 240) * int(matriz_trabajadores[i][10]) #(acceder al dato siguiente)
     
             bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100 #(todo lo que gana sin descuentos)
-            neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social #(el sueldo real final)
+            neto = float(bruto_total) - float(jubilacion) - float(aporte_obra_sindical) - float(aporte_obra_social) #(el sueldo real final)
             
             amarillo = colored.fg("yellow") + colored.attr("bold")
             verde = colored.fg("green") + colored.attr("bold")
