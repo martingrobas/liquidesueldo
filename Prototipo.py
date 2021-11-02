@@ -9,6 +9,7 @@ from funcs import *
 import pandas as pd
 from datetime import datetime, date
 from colored import stylize
+from num2words import num2words
 
 
 
@@ -17,6 +18,8 @@ from colored import stylize
 df_categorias = pd.read_csv('./csv_files/categorias.csv',engine="python") 
 df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv',engine="python")
 df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv',engine="python")
+df_neto = pd.read_csv('./csv_files/neto.csv',engine="python")
+matriz_neto = df_neto.values.tolist()
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
@@ -120,74 +123,6 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     print()
     time.sleep(3.5)
 
-""" # ARREGLAR MARTIN EN FORMATO DEL PROYECTO ACTUAL
-def elegir_trabajador():
-    
-    legajo = input("Ingrese el legajo del trabajador: ")
-
-    if verificar_existencia(legajo) == False:
-        print("El trabajador no existe.")
-        return elegir_trabajador()
-    
-    # preguntar que informacion quiere ver
-    time.sleep(1.5)
-    print()
-    print(stylize("Por favor elija una opcion: ", morado)), time.sleep(0.3)
-    print(stylize(" 1  -    ", morado), stylize("Ver toda la información del trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 2  -    ", morado), stylize("Seleccionar información/atributos específicos", azul)), time.sleep(0.3)
-    print(stylize(" 3  -    ", morado), stylize("Volver al menú principal", azul)), time.sleep(0.3)
-    print()
-    
-    # obenter input
-    try:
-        option = int(input("Seleccione una opción: "))
-    except ValueError:
-        print("Error: Debe ingresar un número entero.")
-        return elegir_trabajador()
-    
-    
-    # check input
-    while option < 1 or option > 3:
-        print("Error: Debe ingresar un número entre 1 y 3.")
-        option = int(input("Seleccione una opción: "))
-        
-    
-    if option == 1:
-        info = GetTrabajador(legajo)
-        for data in info:
-            print(data)
-
-        return elegir_trabajador()        
-    
-    elif option == 2:
-        # input should be a list
-        atributo = input("Ingrese el/los atributo que desea ver (separados por ' , '): ")
-        atributos = atributo.split(", ")
-        for atributo in atributos:
-            # capitalize first letter
-            atributos[atributos.index(atributo)] = atributo.capitalize()
-        
-        info = GetTrabajador(legajo)
-        valid_datos = {
-             # key / indes
-             "Nombre": 1, "Sexo" : 2, "DNI" : 3, "CUIL" : 4, "Fecha" : 5, "Ingreso" : 6, "Fecha" : 7,
-            "Actual" :8, "Nacimiento" : 9, "Edad" : 10, "Horas extra 50%" : 11, "Horas extra 100%" : 12,
-            "Presentismo" : 13, "Escala Salarial" : 14, "Vacaciones" : 15 , "Estado Civil" : 16 ,"Hijos" : 17,
-            "Puesto" : 18
-            }
-        
-        for atributo in atributos:
-            if atributo in valid_datos:
-                print(info[valid_datos[atributo]])
-            
-            else:
-                print(f"El atributo \"{atributo}\" No existe.")
-                
-        return elegir_trabajador()
-    
-    elif option == 3:
-        return ShowMenu() """
-
 
 # Opción 2 
 def dar_de_baja(df_trabajadores):
@@ -243,45 +178,45 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 
 # Opción 4 
-def editar_trabajador(matriz_trabajadores, morado, azul):
-    trabajador = []
+# def editar_trabajador(matriz_trabajadores, morado, azul):
+#     trabajador = []
 
-    legajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
+#     legajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
 
-    print()
-    print(stylize("Opciones:", morado))
-    for i in range(len(matriz_trabajadores)):
-        print(stylize(f" {i + 1}  -    ", morado), stylize(matriz_trabajadores[0][i], azul)), time.sleep(0.3)
-    print()
+#     print()
+#     print(stylize("Opciones:", morado))
+#     for i in range(len(matriz_trabajadores)):
+#         print(stylize(f" {i + 1}  -    ", morado), stylize(matriz_trabajadores[0][i], azul)), time.sleep(0.3)
+#     print()
 
-    dato = int(input("Por favor indique que desea modificar:"))
-    while (dato < 1) or (dato > 16):
-        print("Por favor un indique un numero correspondiente a alguna opcion")
-        dato = int(input("Ingrese que desea modificar:"))
+#     dato = int(input("Por favor indique que desea modificar:"))
+#     while (dato < 1) or (dato > 16):
+#         print("Por favor un indique un numero correspondiente a alguna opcion")
+#         dato = int(input("Ingrese que desea modificar:"))
 
-    for i in range(len(matriz_trabajadores)):
-        if legajo == matriz_trabajadores[i][0]:
-            nuevo_dato = input('Por favor ingrese el nuevo dato a colocar: ')
-            matriz_trabajadores[i][d]
+#     for i in range(len(matriz_trabajadores)):
+#         if legajo == matriz_trabajadores[i][0]:
+#             nuevo_dato = input('Por favor ingrese el nuevo dato a colocar: ')
+#             matriz_trabajadores[i][d]
 
 
     
-    time.sleep(1.5)
+#     time.sleep(1.5)
 
-    '''
-    matriz_trabajadores.append(trabajador)
-    df_trabajadores = pandas.DataFrame(matriz_trabajadores)
+#     '''
+#     matriz_trabajadores.append(trabajador)
+#     df_trabajadores = pandas.DataFrame(matriz_trabajadores)
 
-    time.sleep(1)
-    print("Trabajador modificado con exito, a continuacion sera llevado al menu principal")
-    print()
-    time.sleep(3.5)'''
+#     time.sleep(1)
+#     print("Trabajador modificado con exito, a continuacion sera llevado al menu principal")
+#     print()
+#     time.sleep(3.5)'''
 
-    print("opción 4")
+#     print("opción 4")
 
 
 # Opción 5
-def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, azul, morado):
+def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_neto, azul, morado):
     
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador del cual desea obtener su liquidación: "))
@@ -290,7 +225,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, a
     for i in range(len(matriz_trabajadores)):
         if (legajo) == int(matriz_trabajadores[i][0]):
             time.sleep(1)
-            print("El trabajador se encuentra dentro de los registros, se procederá a calcular su liquidación.")
+            print("El trabajador se encuentra dentro de los registros, se procederá a calcular su liquidación."), time.sleep(0.3)
 
             antiguedad_total = int(matriz_trabajadores[i][6]) * float(planilla_salarial[7][1])
             # A fines prácticos, si se cumple con el presentismo se considerará un 10% del salario BASICO según categoría.
@@ -308,8 +243,8 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, a
             aporte_obra_sindical = bruto_inicial * 0.02
     
 
-            hs_ext_50 = (bruto_inicial /240) * int(matriz_trabajadores[i][9]) #(acceder al dato del CSV)
-            hs_ext_100 = (bruto_inicial / 240) * int(matriz_trabajadores[i][10]) #(acceder al dato siguiente)
+            hs_ext_50 = ((bruto_inicial /240)*1.5) * int(matriz_trabajadores[i][9]) #(acceder al dato del CSV)
+            hs_ext_100 = ((bruto_inicial / 240)*2) * int(matriz_trabajadores[i][10]) #(acceder al dato siguiente)
     
             bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100 #(todo lo que gana sin descuentos)
             neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social #(el sueldo real final)
@@ -321,27 +256,28 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_categorias, a
             print(stylize("Legajo: ", morado), stylize(f"{matriz_trabajadores[i][0]}", azul))
             print(stylize("Nombre y Apellido: ", morado), stylize(f"{matriz_trabajadores[i][1]}", azul))
             print(stylize("Sumas remunerativas:", morado))
-            print(stylize(f"Basico               - - - - - - - - - - - -   ", azul), stylize(f"{matriz_trabajadores[i][16]}", verde))
-            print(stylize(f"Antiguedad           - - - - - - - - - - - -   ", azul), stylize(f"{antiguedad_total}", verde))
-            print(stylize(f"Presentismo          - - - - - - - - - - - -   ", azul), stylize(f"{presentismo}", verde))
-            print(stylize(f"Horas extras al 50%  - - - - - - - - - - - -   ", azul), stylize(f"{hs_ext_50}", verde))
-            print(stylize(f"Horas extras al 100% - - - - - - - - - - - -   ", azul), stylize(f"{hs_ext_100}", verde))
-            print(stylize("Deducciones:", morado))
-            print(stylize(f"Jubilacion           - - - - - - - - - - - -   ", azul), stylize(f"{jubilacion}", amarillo))
-            print(stylize(f"Aporte Obra social   - - - - - - - - - - - -   ", azul), stylize(f"{aporte_obra_social}", amarillo))
-            print(stylize(f"Aporte Obra sindical - - - - - - - - - - - -   ", azul), stylize(f"{aporte_obra_sindical}", amarillo))
-            print(stylize("TOTAL NETO : ", azul, stylize("{neto}", azul)))
-            print(stylize(f"Son en pesos: {print(num2words(neto,to='currency', lang='es'))}", morado))
+            print(stylize(f"Basico               - - - - - - - - - - - -   ", azul), stylize(f"{round(matriz_trabajadores[i][16], 2)}", verde)), time.sleep(0.3)
+            print(stylize(f"Antiguedad           - - - - - - - - - - - -   ", azul), stylize(f"{round(antiguedad_total, 2)}", verde)), time.sleep(0.3)
+            print(stylize(f"Presentismo          - - - - - - - - - - - -   ", azul), stylize(f"{round(presentismo, 2)}", verde)), time.sleep(0.3)
+            print(stylize(f"Horas extras al 50%  - - - - - - - - - - - -   ", azul), stylize(f"{round(hs_ext_50, 2)}", verde)), time.sleep(0.3)
+            print(stylize(f"Horas extras al 100% - - - - - - - - - - - -   ", azul), stylize(f"{round(hs_ext_100, 2)}", verde)), time.sleep(0.3)
+            print(stylize("Deducciones:", morado)), time.sleep(0.3)
+            print(stylize(f"Jubilacion           - - - - - - - - - - - -   ", azul), stylize(f"{round(jubilacion,2)}", amarillo)), time.sleep(0.3)
+            print(stylize(f"Aporte Obra social   - - - - - - - - - - - -   ", azul), stylize(f"{round(aporte_obra_social, 2)}", amarillo)), time.sleep(0.3)
+            print(stylize(f"Aporte Obra sindical - - - - - - - - - - - -   ", azul), stylize(f"{round(aporte_obra_sindical, 2)}", amarillo)), time.sleep(0.3)
+            print()
+            print(stylize(f"TOTAL NETO : {round(neto,2)}", azul)), time.sleep(0.3)
+            print()
+            print(stylize(f"Son en pesos: {(num2words(round(neto,2),to='currency', lang='es_CO'))}", morado))
+            print()
             
 
+            print(stylize("----------------------------------------------- ", morado))
 
-            print(stylize("-----------------------------------------------"), morado)
-
-            # Falta ver como guardamos ese dato del neto que recibe cada empleado al que le calculemos la liquidacion.
-            #Aguinaldo= se cobra en Julio y Diciembre, es el equivalente a un sueldo completo, dividido dos.
-            #Es la mitad del mejor sueldo neto que hubo en ese semestre (01 a 06 y 07 a 12.)
-
-
+            lista_neto = [legajo, matriz_trabajadores[i][1], round(neto,2), datetime.today().month]
+            matriz_neto.append(lista_neto)
+            df_neto = pd.DataFrame(matriz_neto)
+            df_neto.to_csv("./csv_files/neto.csv", sep=',', index=False)
             print("A continuación será llevado de regreso al menú principal")
             print()
             time.sleep(3.5)
@@ -460,7 +396,7 @@ while corriendo:
     elif (opcion == 4):
         editar_trabajador(matriz_planilla_salarial)
     elif (opcion == 5):
-        obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores,df_categorias,azul,morado)
+        obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores, df_neto, matriz_neto, azul, morado)
     elif (opcion == 6):
         imprimir_data(df_trabajadores)
     else:
