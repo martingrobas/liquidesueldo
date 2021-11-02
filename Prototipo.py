@@ -15,15 +15,15 @@ from num2words import num2words
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df_categorias = pd.read_csv('./csv_files/categorias.csv',engine="python") 
-df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv',engine="python")
-df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv',engine="python")
-df_neto = pd.read_csv('./csv_files/neto.csv',engine="python")
+df_categorias = pd.read_csv('./csv_files/categorias.csv') 
+df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
+df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv')
+df_neto = pd.read_csv('./csv_files/neto.csv')
 matriz_neto = df_neto.values.tolist()
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
-lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extra 50%', 'Horas extra 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
+lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extras 50%', 'Horas extras 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
 
 
 # Opción 1
@@ -61,11 +61,11 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     cuil = obtener_cuil(sexo, dni)
     trabajador.append(cuil)
 
-    fecha_ingreso = input("Indique la fecha de ingreso a la empresa (DD-MM-AAAA): ")
+    fecha_ingreso = input("Indique la fecha de ingreso a la empresa (D-M-AAAA): ")
     ingreso_correcto = verificar_fecha(fecha_ingreso, date.today())
     while not ingreso_correcto:
         print('No ingresó una fecha válida')
-        fecha_ingreso = input("Introduzca la fecha de ingreso a la empresa (DD-MM-AAAA): ")
+        fecha_ingreso = input("Introduzca la fecha de ingreso a la empresa (D-M-AAAA): ")
         ingreso_correcto = verificar_fecha(fecha_ingreso, date.today())
     trabajador.append(fecha_ingreso)
     
@@ -73,11 +73,11 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     antiguedad = calcular_diferencia(date(int(fecha_ingreso[2]), int(fecha_ingreso[1]), int(fecha_ingreso[0])), date.today())
     trabajador.append(antiguedad)
     
-    birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
+    birthday = input("Ingrese la fecha de nacimiento (D-M-AAAA): ")
     cumple = verificar_fecha(birthday, date.today())
     while not cumple:
         print('No ingresó una fecha válida')
-        birthday = input("Ingrese la fecha de nacimiento (DD-MM-AAAA): ")
+        birthday = input("Ingrese la fecha de nacimiento (D-M-AAAA): ")
         cumple = verificar_fecha(birthday, date.today())
     trabajador.append(birthday)
         
@@ -92,21 +92,21 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     horas_extras_100 = input("Indique las horas extras totales del trabajador al 100%: ")
     trabajador.append(horas_extras_100)
 
-    presentismo = input("Ingrese 's' para indicar si cumplió con el presentismo, o 'n' para indicar que no: ").upper()
+    presentismo = input("Ingrese 's' para indicar que cumplió con el presentismo, o 'n' para indicar que no: ").upper()
     presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
     trabajador.append(presentismo)
 
     vacaciones = int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
     while (vacaciones < 0) or (vacaciones > 100):
-        print('No ingresó un numero valido, este debe ser un entero positivo y no mayor a cien')
-        vacaciones= int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
+        print('No ingresó un número válido, este debe ser un entero positivo y no mayor a cien')
+        vacaciones= int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
     trabajador.append(vacaciones)
 
     estado_civil = input("Ingrese 'c' para indicar que esta casado, o 's' para soltero: ").upper()
     estado_civil_ = verificar_letras_ingresadas(estado_civil, 'C', 'S')
     trabajador.append(estado_civil_)
 
-    hijos = input("Ingrese 's' para indicar si tiene hijos, o 'n' para indicar que no: ").upper()
+    hijos = input("Ingrese 's' para indicar que si tiene hijos, o 'n' para indicar que no: ").upper()
     hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
     trabajador.append(hijos_)
 
@@ -131,6 +131,7 @@ def dar_de_baja(df_trabajadores):
 
     try:
         df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == dar_de_baja].index, inplace=True)
+        print("El trabajador ya no se encuentra dentro de los registros")
     except:
         time.sleep(1)
         print("No se pudo dar de baja al trabajador")
@@ -153,7 +154,7 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
             print("El trabajador se encuentra dentro de los registros")
             print("Datos del trabajador")
             print(df_trabajadores.iloc[i, 0:])
-            print()
+            print(), time.sleep(1)
             print("A continuación será llevado de regreso al menú principal")
             print()
             time.sleep(3.5)
@@ -256,13 +257,13 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             print(stylize("Legajo: ", morado), stylize(f"{matriz_trabajadores[i][0]}", azul))
             print(stylize("Nombre y Apellido: ", morado), stylize(f"{matriz_trabajadores[i][1]}", azul))
             print(stylize("Sumas remunerativas:", morado))
-            print(stylize(f"Basico               - - - - - - - - - - - -   ", azul), stylize(f"{round(matriz_trabajadores[i][16], 2)}", verde)), time.sleep(0.3)
+            print(stylize(f"Básico               - - - - - - - - - - - -   ", azul), stylize(f"{round(matriz_trabajadores[i][16], 2)}", verde)), time.sleep(0.3)
             print(stylize(f"Antiguedad           - - - - - - - - - - - -   ", azul), stylize(f"{round(antiguedad_total, 2)}", verde)), time.sleep(0.3)
             print(stylize(f"Presentismo          - - - - - - - - - - - -   ", azul), stylize(f"{round(presentismo, 2)}", verde)), time.sleep(0.3)
             print(stylize(f"Horas extras al 50%  - - - - - - - - - - - -   ", azul), stylize(f"{round(hs_ext_50, 2)}", verde)), time.sleep(0.3)
             print(stylize(f"Horas extras al 100% - - - - - - - - - - - -   ", azul), stylize(f"{round(hs_ext_100, 2)}", verde)), time.sleep(0.3)
             print(stylize("Deducciones:", morado)), time.sleep(0.3)
-            print(stylize(f"Jubilacion           - - - - - - - - - - - -   ", azul), stylize(f"{round(jubilacion,2)}", amarillo)), time.sleep(0.3)
+            print(stylize(f"Jubilación           - - - - - - - - - - - -   ", azul), stylize(f"{round(jubilacion,2)}", amarillo)), time.sleep(0.3)
             print(stylize(f"Aporte Obra social   - - - - - - - - - - - -   ", azul), stylize(f"{round(aporte_obra_social, 2)}", amarillo)), time.sleep(0.3)
             print(stylize(f"Aporte Obra sindical - - - - - - - - - - - -   ", azul), stylize(f"{round(aporte_obra_sindical, 2)}", amarillo)), time.sleep(0.3)
             print()
@@ -272,7 +273,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             print()
             
 
-            print(stylize("----------------------------------------------- ", morado))
+            print(stylize("----------------------------------------------- ", morado)), time.sleep(1)
 
             lista_neto = [legajo, matriz_trabajadores[i][1], round(neto,2), datetime.today().month]
             matriz_neto.append(lista_neto)
@@ -364,7 +365,7 @@ for i in range(3):
     print(stylize("Iniciando...", morado))
     time.sleep(0.7)
 print()
-print(stylize("Bienvenido al programa de Liquidacion de Sueldos", azul)), time.sleep(0.7)
+print(stylize("Bienvenido al programa de Liquidación de Sueldos", azul)), time.sleep(0.7)
 print()
 
 corriendo = True
@@ -404,3 +405,4 @@ while corriendo:
 
 time.sleep(1.5)
 print("Hasta pronto!")
+print()
