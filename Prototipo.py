@@ -27,7 +27,7 @@ lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Anti
 
 
 # Opción 1
-def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
+def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, azul, morado):
     time.sleep(1.5)
     trabajador = []
 
@@ -97,8 +97,8 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado):
     trabajador.append(presentismo)
 
     vacaciones = int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
-    while (vacaciones < 0) or (vacaciones > 100):
-        print('No ingresó un número válido, este debe ser un entero positivo y no mayor a cien')
+    while (vacaciones < 0) or (vacaciones > 14):
+        print('No ingresó un número válido, este debe ser un entero positivo y no mayor a catorce')
         vacaciones= int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
     trabajador.append(vacaciones)
 
@@ -179,41 +179,44 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 
 # Opción 4 
-# def editar_trabajador(matriz_trabajadores, morado, azul):
-#     trabajador = []
+def editar_trabajador(matriz_trabajadores, df_trabajadores):
+     
+    time.sleep(1.5)
+    legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
+    print()
 
-#     legajo=input(int("Ingrese el legajo del trabajador que desea modificar: "))
+    for i in range(len(matriz_trabajadores)):
+        if (legajo) == int(matriz_trabajadores[i][0]):
+            time.sleep(1)
+            print("El trabajador se encuentra dentro de los registros, a continuación se le solcitarán datos para editar su información."), time.sleep(0.3)
+            print()
 
-#     print()
-#     print(stylize("Opciones:", morado))
-#     for i in range(len(matriz_trabajadores)):
-#         print(stylize(f" {i + 1}  -    ", morado), stylize(matriz_trabajadores[0][i], azul)), time.sleep(0.3)
-#     print()
+            horas_extras_50 = int(input("Ingrese las nuevas horas extras al 50 del trabajador: "))
+            matriz_trabajadores[i][9] = horas_extras_50
 
-#     dato = int(input("Por favor indique que desea modificar:"))
-#     while (dato < 1) or (dato > 16):
-#         print("Por favor un indique un numero correspondiente a alguna opcion")
-#         dato = int(input("Ingrese que desea modificar:"))
+            horas_extras_100 = int(input("Ingrese las nuevas horas extras al 100 del trabajador: "))
+            matriz_trabajadores[i][10] = horas_extras_100
 
-#     for i in range(len(matriz_trabajadores)):
-#         if legajo == matriz_trabajadores[i][0]:
-#             nuevo_dato = input('Por favor ingrese el nuevo dato a colocar: ')
-#             matriz_trabajadores[i][d]
+            presentismo=(input("Ingrese el nuevo presentismo 's' para indicar que posee o 'n' para indicar o contrario: ")).upper()
+            presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
+            matriz_trabajadores[i][11] = presentismo
+            
+            vacaciones = int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
+            while (vacaciones < 0) or (vacaciones > 14):
+                print('No ingresó un número válido, este debe ser un entero positivo y no mayor a catorce')
+                vacaciones= int(input("Ingrese la cantidad de días de vacaciones del trabajador: ")) 
+            matriz_trabajadores[i][12] = vacaciones
 
+            hijos = input("Ingrese 's' para indicar que si tiene hijos, o 'n' para indicar que no: ").upper()
+            hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
+            matriz_trabajadores[i][13] = hijos
 
-    
-#     time.sleep(1.5)
-
-#     '''
-#     matriz_trabajadores.append(trabajador)
-#     df_trabajadores = pandas.DataFrame(matriz_trabajadores)
-
-#     time.sleep(1)
-#     print("Trabajador modificado con exito, a continuacion sera llevado al menu principal")
-#     print()
-#     time.sleep(3.5)'''
-
-#     print("opción 4")
+            df_trabajadores = pd.DataFrame(matriz_trabajadores)
+            df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
+            time.sleep(1)
+            print("Trabajador modificado con éxito, a continuación será llevado al menú principal")
+            print()
+            time.sleep(3.5)
 
 
 # Opción 5
@@ -389,13 +392,13 @@ while corriendo:
         opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
 
     if (opcion == 1):
-        agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado)  
+        agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado,df_trabajadores)  
     elif (opcion == 2):
         dar_de_baja(df_trabajadores)
     elif (opcion == 3):
         consultar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 4):
-        editar_trabajador(matriz_planilla_salarial)
+        editar_trabajador(matriz_trabajadores, df_trabajadores)
     elif (opcion == 5):
         obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores, df_neto, matriz_neto, azul, morado)
     elif (opcion == 6):
