@@ -15,21 +15,23 @@ from num2words import num2words
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df_categorias = pd.read_csv('./csv_files/categorias.csv', sep=',') 
-df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
-df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv', sep=',')
-df_neto = pd.read_csv('./csv_files/neto.csv', sep=',')
+df_categorias = pd.read_csv(r'./csv_files/categorias.csv', sep=',') 
+df_planilla_salarial = pd.read_csv(r'./csv_files/planilla_salarial.csv', sep=',')
+df_neto = pd.read_csv(r'./csv_files/neto.csv', sep=',')
 matriz_neto = df_neto.values.tolist()
-matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
 lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extras 50%', 'Horas extras 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
+#Legajo,Nombre,Sexo,DNI,CUIL,Fecha Ingreso,Antiguedad,Nacimiento,Edad,Horas extras 50%,Horas extras 100%,Presentismo,Vacaciones,Estado Civil,Hijos,Puesto,Básico
 
 
 # Opción 1
-def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, azul, morado):
+def agregar_trabajador(matriz_categorias, azul, morado):
     time.sleep(1.5)
     trabajador = []
+
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
+    matriz_trabajadores = df_trabajadores.values.tolist()
 
     # Dato principal
     legajo=int(input("Ingrese el legajo del trabajador: "))
@@ -125,33 +127,54 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, 
 
 
 # Opción 2 
-def dar_de_baja(df_trabajadores):
+def dar_de_baja():
     time.sleep(1.5)
-    dar_de_baja = int(input("ingrese el legajo del trabajador que desea dar de baja: "))
-    
-    try:
-        df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == dar_de_baja].index, inplace=True)
-        print("El trabajador ya no se encuentra dentro de los registros")
-    except:
+
+    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    matriz_trabajadores = df_trabajadores.values.tolist()
+
+    legajo = int(input("ingrese el legajo del trabajador que desea dar de baja: "))
+    for i in range(len(matriz_trabajadores)):
+        if (legajo) == int(matriz_trabajadores[i][0]):
+            matrix = matriz_trabajadores[:]
+            matrix.remove(matriz_trabajadores[i])
+            matriz_trabajadores = matrix
+            df_trabajadores = pd.DataFrame(matriz_trabajadores)
+            df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
+            time.sleep(1)
+            print("Trabajador dado de baja con éxito, a continuación será llevado al menú principal")
+            print()
+            time.sleep(3.5)
+
+            break
+    else:
         time.sleep(1)
-        print("No se pudo dar de baja al trabajador")
-        print("Por favor intente de nuevo y verifique que el legajo sea correcto")
-    finally:
-        time.sleep(1)
-        print()
-        print("A continuación será llevado de regreso al menú principal")
-        print()
-        time.sleep(3.5)
+        print("El trabajador no se encuentra dentro de los registros"), time.sleep(1.5)
+        print("¿Desea volver a intentarlo?")
+        print("Ingrese -1 para volver a intentar o 0 para continuar:")
+        respuesta = int(input("Respuesta: "))
+        
+        while (respuesta != -1) and (respuesta != 0):
+            print("Por favor ingrese -1 para volver a intentar o 0 para continuar:")
+            respuesta = int(input('Respuesta: ')), time.sleep(0.5)
+        
+        if respuesta == -1:
+            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+        else:
+            print("Entendido, será llevado de regreso al menú principal.")
+            print()
+            time.sleep(3.5)
+
 
 # Opción 3
-def consultar_trabajador(matriz_trabajadores, df_trabajadores):
+def consultar_trabajador():
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador que desea consultar: "))
     print()
 
-    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
     matriz_trabajadores = df_trabajadores.values.tolist()
-    
+
     for i in range(len(matriz_trabajadores)):
         if (legajo) == int(matriz_trabajadores[i][0]):
             time.sleep(1)
@@ -183,8 +206,10 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
 
 
 # Opción 4 
-def editar_trabajador(matriz_trabajadores, df_trabajadores):
-     
+def editar_trabajador():
+    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    matriz_trabajadores = df_trabajadores.values.tolist()
+    
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
     print()
@@ -341,9 +366,10 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
 
 
 # Opción 6
-def imprimir_data(data_frame):
+def imprimir_data():
+    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
     time.sleep(1.5)
-    print(data_frame)
+    print(df_trabajadores)
     print()
     print("A continuación será llevado de regreso al menú principal")
     print()
@@ -427,17 +453,17 @@ while corriendo:
         opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
 
     if (opcion == 1):
-        agregar_trabajador(matriz_trabajadores, matriz_categorias, azul, morado,df_trabajadores)  
+        agregar_trabajador(matriz_categorias, azul, morado,)  
     elif (opcion == 2):
-        dar_de_baja(df_trabajadores)
+        dar_de_baja()
     elif (opcion == 3):
-        consultar_trabajador(matriz_trabajadores, df_trabajadores)
+        consultar_trabajador()
     elif (opcion == 4):
-        editar_trabajador(matriz_trabajadores, df_trabajadores)
+        editar_trabajador()
     elif (opcion == 5):
-        obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores, df_neto, matriz_neto, azul, morado)
+        obtener_liquidacion(matriz_planilla_salarial, df_neto, matriz_neto, azul, morado)
     elif (opcion == 6):
-        imprimir_data(df_trabajadores)
+        imprimir_data()
     else:
         corriendo = finalizar_programa(morado, azul)
 
