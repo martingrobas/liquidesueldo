@@ -288,6 +288,8 @@ def obtener_liquidacion(planilla_salarial, df_neto, matriz_neto, azul, morado):
     df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     matriz_trabajadores = df_trabajadores.values.tolist()
     
+    index_bak =  list(df_neto.columns.values)
+
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador del cual desea obtener su liquidación: "))
     print()
@@ -350,7 +352,7 @@ def obtener_liquidacion(planilla_salarial, df_neto, matriz_neto, azul, morado):
 
             lista_neto = [legajo, matriz_trabajadores[i][1], round(neto,2), datetime.today().month]
             matriz_neto.append(lista_neto)
-            df_neto = pd.DataFrame(matriz_neto)
+            df_neto = pd.DataFrame(matriz_neto, columns=index_bak)
             df_neto.to_csv("./csv_files/neto.csv", sep=',', index=False)
             print("A continuación será llevado de regreso al menú principal")
             print()
