@@ -131,7 +131,6 @@ def dar_de_baja(df_trabajadores):
     
     try:
         df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == dar_de_baja].index, inplace=True)
-        #df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
         print("El trabajador ya no se encuentra dentro de los registros")
     except:
         time.sleep(1)

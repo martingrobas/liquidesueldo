@@ -6,18 +6,6 @@ import pandas as pd
 from datetime import datetime, date
 from colored import stylize
 
-# SEGUNDA PARTE - LECTURA DE DATOS INICIALES
-#------ Carga de datos ------#
-df_categorias = pd.read_csv("./csv_files/categorias.csv")
-df_trabajadores = pd.read_csv("./csv_files/trabajadores.csv")
-df_planilla_salarial = pd.read_csv("./csv_files/planilla_salarial.csv")
-df_neto = pd.read_csv('./csv_files/neto.csv')
-matriz_trabajadores = df_trabajadores.values.tolist()
-matriz_planilla_salarial = df_planilla_salarial.values.tolist()
-matriz_categorias = df_categorias.values.tolist()
-lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extras 50%', 'Horas extras 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
-
-
 # TERCERA PARTE - FUNCIONES
 
 def verificar_fecha(cad, fecha_actual):
