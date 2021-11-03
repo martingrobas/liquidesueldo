@@ -19,7 +19,6 @@ matriz_neto = df_neto.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
 lista_datos = ['Legajo', 'Nombre', 'Sexo', 'DNI', 'CUIL', 'Fecha Ingreso', 'Antiguedad', 'Nacimiento', 'Edad', 'Horas extras 50%', 'Horas extras 100%', 'Presentismo', 'Vacaciones', 'Estado Civil', 'Hijos', 'Puesto', 'Básico']
-#Legajo,Nombre,Sexo,DNI,CUIL,Fecha Ingreso,Antiguedad,Nacimiento,Edad,Horas extras 50%,Horas extras 100%,Presentismo,Vacaciones,Estado Civil,Hijos,Puesto,Básico
 
 
 # Opción 1
