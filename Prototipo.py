@@ -309,11 +309,6 @@ def obtener_liquidacion(planilla_salarial, df_neto, matriz_neto, azul, morado):
                 presentismo = 0
             bruto_inicial = float(matriz_trabajadores[i][16]) + antiguedad_total + presentismo
             #El primer item es el que accede al dato del sueldo básico segun el rango del empleado.
-            
-            #Deducciones
-            aporte_obra_social = bruto_inicial * 0.03
-            jubilacion = bruto_inicial * 0.11
-            aporte_obra_sindical = bruto_inicial * 0.02
     
 
             hs_ext_50 = ((bruto_inicial /240)*1.5) * int(matriz_trabajadores[i][9]) 
@@ -321,6 +316,11 @@ def obtener_liquidacion(planilla_salarial, df_neto, matriz_neto, azul, morado):
 
             #todo lo que gana sin descuentos
             bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100
+
+            #Deducciones
+            aporte_obra_social = bruto_total * 0.03
+            jubilacion = bruto_total * 0.11
+            aporte_obra_sindical = bruto_total * 0.02
 
             #el sueldo real final
             neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social
