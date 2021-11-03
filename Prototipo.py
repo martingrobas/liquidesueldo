@@ -149,6 +149,9 @@ def consultar_trabajador(matriz_trabajadores, df_trabajadores):
     legajo = int(input("Ingrese el legajo del trabajador que desea consultar: "))
     print()
 
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
+    matriz_trabajadores = df_trabajadores.values.tolist()
+    
     for i in range(len(matriz_trabajadores)):
         if (legajo) == int(matriz_trabajadores[i][0]):
             time.sleep(1)
@@ -186,32 +189,43 @@ def editar_trabajador(matriz_trabajadores, df_trabajadores):
     legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
     print()
 
+    trabajador = []
+
     for i in range(len(matriz_trabajadores)):
         if (legajo) == int(matriz_trabajadores[i][0]):
+            for j in range(17):
+                trabajador.append(matriz_trabajadores[i][j])
+
+            print(len(trabajador))
+            print(trabajador)
             time.sleep(1)
             print("El trabajador se encuentra dentro de los registros, a continuación se le solcitarán datos para editar su información."), time.sleep(0.3)
             print()
 
             horas_extras_50 = int(input("Ingrese las nuevas horas extras al 50 del trabajador: "))
-            matriz_trabajadores[i][9] = horas_extras_50
+            trabajador[9] = horas_extras_50
 
             horas_extras_100 = int(input("Ingrese las nuevas horas extras al 100 del trabajador: "))
-            matriz_trabajadores[i][10] = horas_extras_100
+            trabajador[10] = horas_extras_100
 
             presentismo=(input("Ingrese el nuevo presentismo 's' para indicar que posee o 'n' para indicar o contrario: ")).upper()
             presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
-            matriz_trabajadores[i][11] = presentismo
+            trabajador[11] = presentismo
             
             vacaciones = int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
             while (vacaciones < 0) or (vacaciones > 14):
                 print('No ingresó un número válido, este debe ser un entero positivo y no mayor a catorce')
                 vacaciones= int(input("Ingrese la cantidad de días de vacaciones del trabajador: ")) 
-            matriz_trabajadores[i][12] = vacaciones
+            trabajador[12] = vacaciones
 
             hijos = input("Ingrese 's' para indicar que si tiene hijos, o 'n' para indicar que no: ").upper()
             hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
-            matriz_trabajadores[i][13] = hijos_
+            trabajador[13] = hijos_
 
+            matrix = matriz_trabajadores[:]
+            matrix.remove(matriz_trabajadores[i])
+            matriz_trabajadores = matrix
+            matriz_trabajadores.append(trabajador)
             df_trabajadores = pd.DataFrame(matriz_trabajadores)
             df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
             time.sleep(1)
