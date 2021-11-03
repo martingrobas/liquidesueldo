@@ -1,7 +1,5 @@
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
-# PRIMERA PARTE - IMPORTACIONES
-#------ Se hacen los importes necesarios ------#
 import time
 import colored
 from funcs import *
