@@ -3,7 +3,6 @@
 # PRIMERA PARTE - IMPORTACIONES
 #------ Se hacen los importes necesarios ------#
 import time
-import random
 import colored
 from funcs import *
 import pandas as pd
@@ -15,9 +14,9 @@ from num2words import num2words
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df_categorias = pd.read_csv(r'./csv_files/categorias.csv', sep=',') 
-df_planilla_salarial = pd.read_csv(r'./csv_files/planilla_salarial.csv', sep=',')
-df_neto = pd.read_csv(r'./csv_files/neto.csv', sep=',')
+df_categorias = pd.read_csv('./csv_files/categorias.csv') 
+df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv')
+df_neto = pd.read_csv('./csv_files/neto.csv')
 matriz_neto = df_neto.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()
@@ -30,7 +29,7 @@ def agregar_trabajador(matriz_categorias, azul, morado):
     time.sleep(1.5)
     trabajador = []
 
-    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     matriz_trabajadores = df_trabajadores.values.tolist()
 
     # Dato principal
@@ -52,7 +51,6 @@ def agregar_trabajador(matriz_categorias, azul, morado):
     
 
     #Numeros
-
     dni=int(input("Ingrese el DNI: "))
     existe_trabajador = verificar_existencia(dni)
     while existe_trabajador:
@@ -115,10 +113,12 @@ def agregar_trabajador(matriz_categorias, azul, morado):
     puesto, basico = solicitar_puesto(matriz_categorias, azul, morado)
     trabajador.append(puesto)
     trabajador.append(basico)
-
+    
+    index_bak =  list(df_trabajadores.columns.values)
+    
     matriz_trabajadores.append(trabajador)
-    df_trabajadores = pd.DataFrame(matriz_trabajadores)
-    df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
+    df_trabajadores = pd.DataFrame(matriz_trabajadores, columns=index_bak)
+    df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
 
     time.sleep(1)
     print("Trabajador agregado con éxito, a continuación será llevado al menu principal")
@@ -130,8 +130,10 @@ def agregar_trabajador(matriz_categorias, azul, morado):
 def dar_de_baja():
     time.sleep(1.5)
 
-    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     matriz_trabajadores = df_trabajadores.values.tolist()
+
+    index_bak =  list(df_trabajadores.columns.values)
 
     legajo = int(input("ingrese el legajo del trabajador que desea dar de baja: "))
     for i in range(len(matriz_trabajadores)):
@@ -139,8 +141,8 @@ def dar_de_baja():
             matrix = matriz_trabajadores[:]
             matrix.remove(matriz_trabajadores[i])
             matriz_trabajadores = matrix
-            df_trabajadores = pd.DataFrame(matriz_trabajadores)
-            df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
+            df_trabajadores = pd.DataFrame(matriz_trabajadores, columns=index_bak)
+            df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
             time.sleep(1)
             print("Trabajador dado de baja con éxito, a continuación será llevado al menú principal")
             print()
@@ -159,7 +161,7 @@ def dar_de_baja():
             respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
         if respuesta == -1:
-            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+            dar_de_baja()
         else:
             print("Entendido, será llevado de regreso al menú principal.")
             print()
@@ -172,7 +174,7 @@ def consultar_trabajador():
     legajo = int(input("Ingrese el legajo del trabajador que desea consultar: "))
     print()
 
-    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     matriz_trabajadores = df_trabajadores.values.tolist()
 
     for i in range(len(matriz_trabajadores)):
@@ -198,7 +200,7 @@ def consultar_trabajador():
             respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
         if respuesta == -1:
-            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+            consultar_trabajador()
         else:
             print("Entendido, será llevado de regreso al menú principal.")
             print()
@@ -207,18 +209,21 @@ def consultar_trabajador():
 
 # Opción 4 
 def editar_trabajador():
-    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     matriz_trabajadores = df_trabajadores.values.tolist()
     
     time.sleep(1.5)
-    legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
-    print()
 
+    legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
+  
+    print()
+    
+    index_bak =  list(df_trabajadores.columns.values)
     trabajador = []
 
     for i in range(len(matriz_trabajadores)):
         if (legajo) == int(matriz_trabajadores[i][0]):
-            for j in range(17):
+            for j in range(len(matriz_trabajadores[0])):
                 trabajador.append(matriz_trabajadores[i][j])
 
             print(len(trabajador))
@@ -251,8 +256,8 @@ def editar_trabajador():
             matrix.remove(matriz_trabajadores[i])
             matriz_trabajadores = matrix
             matriz_trabajadores.append(trabajador)
-            df_trabajadores = pd.DataFrame(matriz_trabajadores)
-            df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
+            df_trabajadores = pd.DataFrame(matriz_trabajadores, columns=index_bak)
+            df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
             time.sleep(1)
             print("Trabajador modificado con éxito, a continuación será llevado al menú principal")
             print()
@@ -271,16 +276,17 @@ def editar_trabajador():
             respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
         if respuesta == -1:
-            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+            editar_trabajador()
         else:
             print("Entendido, será llevado de regreso al menú principal.")
             print()
             time.sleep(3.5)
 
 
-
 # Opción 5
-def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_neto, azul, morado):
+def obtener_liquidacion(planilla_salarial, df_neto, matriz_neto, azul, morado):
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
+    matriz_trabajadores = df_trabajadores.values.tolist()
     
     time.sleep(1.5)
     legajo = int(input("Ingrese el legajo del trabajador del cual desea obtener su liquidación: "))
@@ -290,16 +296,17 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
         if (legajo) == int(matriz_trabajadores[i][0]):
             time.sleep(1)
             print("El trabajador se encuentra dentro de los registros, se procederá a calcular su liquidación."), time.sleep(0.3)
+            print()
 
             antiguedad_total = int(matriz_trabajadores[i][6]) * float(planilla_salarial[7][1])
-            # A fines prácticos, si se cumple con el presentismo se considerará un 10% del salario BASICO según categoría.
+            # A fines prácticos, si se cumple con el presentismo se considerará un 10% del salario BÁSICO según categoría.
 
             if ((matriz_trabajadores[i][11]) == "S"):
                 presentismo = float(matriz_trabajadores[i][16]) * 0.1
             else:
                 presentismo = 0
             bruto_inicial = float(matriz_trabajadores[i][16]) + antiguedad_total + presentismo
-            #El primer item es el que accede al dato del sueldo basico segun el rango del empleado.
+            #El primer item es el que accede al dato del sueldo básico segun el rango del empleado.
             
             #Deducciones
             aporte_obra_social = bruto_inicial * 0.03
@@ -307,11 +314,14 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             aporte_obra_sindical = bruto_inicial * 0.02
     
 
-            hs_ext_50 = ((bruto_inicial /240)*1.5) * int(matriz_trabajadores[i][9]) #(acceder al dato del CSV)
-            hs_ext_100 = ((bruto_inicial / 240)*2) * int(matriz_trabajadores[i][10]) #(acceder al dato siguiente)
-    
-            bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100 #(todo lo que gana sin descuentos)
-            neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social #(el sueldo real final)
+            hs_ext_50 = ((bruto_inicial /240)*1.5) * int(matriz_trabajadores[i][9]) 
+            hs_ext_100 = ((bruto_inicial / 240)*2) * int(matriz_trabajadores[i][10])
+
+            #todo lo que gana sin descuentos
+            bruto_total = bruto_inicial + hs_ext_50 + hs_ext_100
+
+            #el sueldo real final
+            neto = bruto_total - jubilacion - aporte_obra_sindical - aporte_obra_social
             
             amarillo = colored.fg("yellow") + colored.attr("bold")
             verde = colored.fg("green") + colored.attr("bold")
@@ -341,7 +351,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             lista_neto = [legajo, matriz_trabajadores[i][1], round(neto,2), datetime.today().month]
             matriz_neto.append(lista_neto)
             df_neto = pd.DataFrame(matriz_neto)
-            df_neto.to_csv(r"./csv_files/neto.csv", sep=',', index=False)
+            df_neto.to_csv("./csv_files/neto.csv", sep=',', index=False)
             print("A continuación será llevado de regreso al menú principal")
             print()
             time.sleep(3.5)
@@ -355,10 +365,10 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
         
         while (respuesta != -1) and (respuesta != 0):
             print("Por favor ingrese -1 para volver a intentar o 0 para continuar:")
-            respuesta = int(input('Respuesta: ')), time.sleep(0.5)
+            respuesta = int(input('Respuesta: '))
         
         if respuesta == -1:
-            obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores, df_neto, matriz_neto, azul, morado)
+            obtener_liquidacion(matriz_planilla_salarial, df_neto, matriz_neto, azul, morado)
         else:
             print("Entendido, será llevado de regreso al menú principal.")
             print()
@@ -367,7 +377,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
 
 # Opción 6
 def imprimir_data():
-    df_trabajadores = pd.read_csv(r'./csv_files/trabajadores.csv', sep=',')
+    df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
     time.sleep(1.5)
     print(df_trabajadores)
     print()
@@ -422,51 +432,54 @@ def finalizar_programa(morado, azul):
   
 # CUARTA PARTE - PROGRAMA PRINCIPAL
 #------Se muestra la "interfaz" ------#
-azul = colored.fg("sky_blue_1") + colored.attr("bold")
-morado = colored.fg("purple_1b") + colored.attr("bold")
 
-for i in range(3):
-    print(stylize("Iniciando...", morado))
-    time.sleep(0.7)
-print()
-print(stylize("Bienvenido al programa de Liquidación de Sueldos", azul)), time.sleep(0.7)
-print()
+def main():
+    azul = colored.fg("sky_blue_1") + colored.attr("bold")
+    morado = colored.fg("purple_1b") + colored.attr("bold")
 
-corriendo = True
-while corriendo:
-    print(stylize("             Menú Principal           ", morado)), time.sleep(0.3)
-    print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 2  -    ", morado), stylize("Dar de Baja Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 4  -    ", morado), stylize("Editar Trabajador", azul)), time.sleep(0.3)
-    print(stylize(" 5  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
-    print(stylize(" 6  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
-    print(stylize(" 7  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
+    for i in range(3):
+        print(stylize("Iniciando...", morado))
+        time.sleep(0.7)
 
-    print()
-    opcion = int(input("Por favor seleccione una opción: "))
-    print()
-    
-    while (opcion < 1) or (opcion > 7):
+    print(stylize("\nBienvenido al programa de Liquidación de Sueldos\n", azul)), time.sleep(0.7)
+  
+
+    corriendo = True
+    while corriendo:
+        print(stylize("             Menú Principal           ", morado)), time.sleep(0.3)
+        print(stylize(" 1  -    ", morado), stylize("Agregar Trabajador", azul)), time.sleep(0.3)
+        print(stylize(" 2  -    ", morado), stylize("Dar de Baja Trabajador", azul)), time.sleep(0.3)
+        print(stylize(" 3  -    ", morado), stylize("Consultar Trabajador", azul)), time.sleep(0.3)
+        print(stylize(" 4  -    ", morado), stylize("Editar Trabajador", azul)), time.sleep(0.3)
+        print(stylize(" 5  -    ", morado), stylize("Obtener una Liquidación", azul)), time.sleep(0.3)
+        print(stylize(" 6  -    ", morado), stylize("Imprimir Datos", azul)), time.sleep(0.3)
+        print(stylize(" 7  -    ", morado), stylize("Detener Programa", azul))    , time.sleep(0.8)
+
+        
+        opcion = int(input("\n Por favor seleccione una opción: "))
         print()
-        print("Opción no válida")
-        opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
+        
+        while (opcion < 1) or (opcion > 7):
+            print("\n Opción no válida")
+            opcion = int(input("Por favor indique su opción a seleccionar (entre 1 y 6): "))
 
-    if (opcion == 1):
-        agregar_trabajador(matriz_categorias, azul, morado,)  
-    elif (opcion == 2):
-        dar_de_baja()
-    elif (opcion == 3):
-        consultar_trabajador()
-    elif (opcion == 4):
-        editar_trabajador()
-    elif (opcion == 5):
-        obtener_liquidacion(matriz_planilla_salarial, df_neto, matriz_neto, azul, morado)
-    elif (opcion == 6):
-        imprimir_data()
-    else:
-        corriendo = finalizar_programa(morado, azul)
+        if (opcion == 1):
+            agregar_trabajador(matriz_categorias, azul, morado,)  
+        elif (opcion == 2):
+            dar_de_baja()
+        elif (opcion == 3):
+            consultar_trabajador()
+        elif (opcion == 4):
+            editar_trabajador()
+        elif (opcion == 5):
+            obtener_liquidacion(matriz_planilla_salarial, df_neto, matriz_neto, azul, morado)
+        elif (opcion == 6):
+            imprimir_data()
+        else:
+            corriendo = finalizar_programa(morado, azul)
 
-time.sleep(1.5)
-print("Hasta pronto!")
-print()
+    time.sleep(1.5)
+    print("Hasta pronto!")
+
+if __name__ == "__main__":
+    main()
