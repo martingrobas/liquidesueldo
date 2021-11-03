@@ -11,6 +11,7 @@ from colored import stylize
 df_categorias = pd.read_csv("./csv_files/categorias.csv")
 df_trabajadores = pd.read_csv("./csv_files/trabajadores.csv")
 df_planilla_salarial = pd.read_csv("./csv_files/planilla_salarial.csv")
+df_neto = pd.read_csv('./csv_files/neto.csv')
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
 matriz_categorias = df_categorias.values.tolist()

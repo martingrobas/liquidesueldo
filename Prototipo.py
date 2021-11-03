@@ -15,10 +15,10 @@ from num2words import num2words
 
 # SEGUNDA PARTE - LECTURA DE DATOS INICIALES
 #------ Carga de datos ------#
-df_categorias = pd.read_csv('./csv_files/categorias.csv') 
-df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv')
-df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv')
-df_neto = pd.read_csv('./csv_files/neto.csv')
+df_categorias = pd.read_csv('./csv_files/categorias.csv', sep=',') 
+df_trabajadores = pd.read_csv('./csv_files/trabajadores.csv', sep=',')
+df_planilla_salarial = pd.read_csv('./csv_files/planilla_salarial.csv', sep=',')
+df_neto = pd.read_csv('./csv_files/neto.csv', sep=',')
 matriz_neto = df_neto.values.tolist()
 matriz_trabajadores = df_trabajadores.values.tolist()
 matriz_planilla_salarial = df_planilla_salarial.values.tolist()
@@ -96,7 +96,7 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, 
     presentismo = verificar_letras_ingresadas(presentismo, 'S', 'N')
     trabajador.append(presentismo)
 
-    vacaciones = int(input("Ingrese la cantidad de dias de vacaciones del trabajador: "))
+    vacaciones = int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
     while (vacaciones < 0) or (vacaciones > 14):
         print('No ingresó un número válido, este debe ser un entero positivo y no mayor a catorce')
         vacaciones= int(input("Ingrese la cantidad de días de vacaciones del trabajador: "))
@@ -116,7 +116,7 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, 
 
     matriz_trabajadores.append(trabajador)
     df_trabajadores = pd.DataFrame(matriz_trabajadores)
-    df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
+    df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
 
     time.sleep(1)
     print("Trabajador agregado con éxito, a continuación será llevado al menu principal")
@@ -128,9 +128,10 @@ def agregar_trabajador(matriz_trabajadores, matriz_categorias, df_trabajadores, 
 def dar_de_baja(df_trabajadores):
     time.sleep(1.5)
     dar_de_baja = int(input("ingrese el legajo del trabajador que desea dar de baja: "))
-
+    
     try:
         df_trabajadores.drop(df_trabajadores.loc[df_trabajadores['Legajo'] == dar_de_baja].index, inplace=True)
+        #df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
         print("El trabajador ya no se encuentra dentro de los registros")
     except:
         time.sleep(1)
@@ -138,6 +139,7 @@ def dar_de_baja(df_trabajadores):
         print("Por favor intente de nuevo y verifique que el legajo sea correcto")
     finally:
         time.sleep(1)
+        print()
         print("A continuación será llevado de regreso al menú principal")
         print()
         time.sleep(3.5)
@@ -209,14 +211,34 @@ def editar_trabajador(matriz_trabajadores, df_trabajadores):
 
             hijos = input("Ingrese 's' para indicar que si tiene hijos, o 'n' para indicar que no: ").upper()
             hijos_ = verificar_letras_ingresadas(hijos, 'S', 'N')
-            matriz_trabajadores[i][13] = hijos
+            matriz_trabajadores[i][13] = hijos_
 
             df_trabajadores = pd.DataFrame(matriz_trabajadores)
-            df_trabajadores.to_csv("./csv_files/trabajadores.csv", sep=',', index=False)
+            df_trabajadores.to_csv(r"./csv_files/trabajadores.csv", sep=',', index=False)
             time.sleep(1)
             print("Trabajador modificado con éxito, a continuación será llevado al menú principal")
             print()
             time.sleep(3.5)
+
+            break
+    else:
+        time.sleep(1)
+        print("El trabajador no se encuentra dentro de los registros"), time.sleep(1.5)
+        print("¿Desea volver a intentarlo?")
+        print("Ingrese -1 para volver a intentar o 0 para continuar:")
+        respuesta = int(input("Respuesta: "))
+        
+        while (respuesta != -1) and (respuesta != 0):
+            print("Por favor ingrese -1 para volver a intentar o 0 para continuar:")
+            respuesta = int(input('Respuesta: ')), time.sleep(0.5)
+        
+        if respuesta == -1:
+            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+        else:
+            print("Entendido, será llevado de regreso al menú principal.")
+            print()
+            time.sleep(3.5)
+
 
 
 # Opción 5
@@ -281,7 +303,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             lista_neto = [legajo, matriz_trabajadores[i][1], round(neto,2), datetime.today().month]
             matriz_neto.append(lista_neto)
             df_neto = pd.DataFrame(matriz_neto)
-            df_neto.to_csv("./csv_files/neto.csv", sep=',', index=False)
+            df_neto.to_csv(r"./csv_files/neto.csv", sep=',', index=False)
             print("A continuación será llevado de regreso al menú principal")
             print()
             time.sleep(3.5)
@@ -298,7 +320,7 @@ def obtener_liquidacion(planilla_salarial, matriz_trabajadores, df_neto, matriz_
             respuesta = int(input('Respuesta: ')), time.sleep(0.5)
         
         if respuesta == -1:
-            consultar_trabajador(matriz_trabajadores, df_trabajadores)
+            obtener_liquidacion(matriz_planilla_salarial,matriz_trabajadores, df_neto, matriz_neto, azul, morado)
         else:
             print("Entendido, será llevado de regreso al menú principal.")
             print()
