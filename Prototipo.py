@@ -211,7 +211,7 @@ def editar_trabajador():
     
     time.sleep(1.5)
 
-    legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su información: "))
+    legajo = int(input("Ingrese el legajo del trabajador del cual desea editar su informaciónn: "))
   
     print()
     
