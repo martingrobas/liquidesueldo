@@ -4,4 +4,3 @@ Developers:
 -Martin Grobas
 -Gabriela Venegas
 -Julian Alagastin
--Lucas Perez
